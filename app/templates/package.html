@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container fluid">
+
+    <div class="card bg-light m-2">
+      <div class="card-header">
+        {{ pkg['name'] }}
+      </div>
+      <ul class="list-group list-group-flush">
+          <table class="table table-borderless">
+            <tr>
+              <td>Version</td>
+              <td>{{pkg['current_version']}}</td>
+            </tr>
+            <tr>
+              <td>Latest Version</td>
+              <td><a href="http://release-monitoring.org/project/{{pkg['rm_version']['id']}}">{{pkg['rm_version']['version']}}</a></td>
+            </tr>
+            <tr>
+              <td>License</td>
+              <td>{{pkg['license']}}</td>
+            </tr>
+            <tr>
+              <td>Homepage</td>
+              <td><a href="{{pkg['url']}}">{{pkg['url']}}</a></td>
+            </tr>
+            <tr>
+              <td>Path</td>
+              <td><a href="https://git.buildroot.net/buildroot/tree/{{pkg['pkg_path']}}?h={{commit}}">{{pkg['pkg_path'][2:]}}</a>
+            </tr>
+            <tr>
+              <td>Infrastructure(s)</td>
+              <td>
+                {% for infra in pkg['infras'] %}
+                <p>{{infra[0]}}: <a href="{{url_for('infrastructure', infra=infra[1])}}">{{infra[1]}}</a></p>
+                {% endfor %}
+              </td>
+            </tr>
+            <tr>
+              <td>Dependencies</td>
+              <td>
+                {% for dep in pkg['dependencies'] %}
+                <a href="{{url_for('package', name=dep)}}">{{dep}}</a>
+                {% endfor %}
+              </td>
+            </tr>
+            <tr>
+              <td>Developer(s)</td>
+              <td>
+                {% for developer in pkg['developers'] %}
+                <p><a href="{{url_for('developer', developer=developer)}}">{{developer}}</a></p>
+                {% endfor %}
+              </td>
+            </tr>
+          </table>
+      </ul>
+    </div>
+
+    <div class="card bg-light m-2">
+      <div class="card-header">Status</div>
+      <ul class="list-group list-group-flush">
+        <table class="table">
+          <tbody>
+          {% for key in pkg['status'] %}
+            {% if pkg['status'][key][0] == 'ok' %}
+            <tr class="table-success">
+            {% elif pkg['status'][key][0] == 'warning' %}
+            <tr class="table-warning">
+            {% elif pkg['status'][key][0] == 'error' %}
+            <tr class="table-danger">
+            {% else %}
+            <tr class="table-info">
+            {% endif %}
+              <td> {{ key }}</td>
+              <td> {{ pkg['status'][key][1] }} </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </ul>
+    </div>
+
+    <div class="card m-2">
+      <div class="card-header">Patches</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          {% for patch in pkg['patches']['files'] %}
+          <p><a href="https://git.buildroot.net/buildroot/tree/{{pkg['pkg_path'][2:]}}/{{patch}}?id={{commit}}">{{patch}}</a></p>
+          {% endfor %}
+        </li>
+      </ul>
+    </div>
+
+</div>
+
+{% endblock %}

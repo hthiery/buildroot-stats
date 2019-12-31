@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Buildroot Stats</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}" >
+    <link rel="stylesheet" href="{{url_for('static', filename='js/bootstrap.min.js')}}" >
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="http://buildroot.org">
+        <img src="{{url_for('static', filename='img/logo.png')}}" width="37" height="30" class="d-inline-block align-top" alt="">
+        Buildroot
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('packages', commit=commit)}}">Packages</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('developers', commit=commit)}}">Developers</a>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Filter
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{{url_for('filter', filter='hash')}}">no hash</a>
+              <a class="dropdown-item" href="{{url_for('filter', filter='patches')}}">patches</a>
+              <a class="dropdown-item" href="{{url_for('filter', filter='license')}}">no license</a>
+              <a class="dropdown-item" href="{{url_for('filter', filter='url')}}">no url</a>
+              <a class="dropdown-item" href="{{url_for('filter', filter='license-files')}}">no licence-files</a>
+              <a class="dropdown-item" href="{{url_for('filter', filter='version')}}">outdated version</a>
+              <a class="dropdown-item" href="{{url_for('filter', filter='developers')}}">no developers</a>
+              <a class="dropdown-item" href="{{url_for('filter', filter='pkg-check')}}">failed pkg-check</a>
+            </div>
+          </li>
+        </ul>
+        <span class="navbar-text"><a href="https://git.buildroot.net/buildroot/tree/?h={{commit}}">Git Hash {{commit[:12]}}..</a></span>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/bootstrap.js')}}"></script>
+  </body>
+</html>

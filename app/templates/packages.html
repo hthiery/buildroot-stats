@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container fluid">
+
+  <div class="alert alert-primary mt-2 mb-2" role="alert">
+    {{title}}
+  </div>
+
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="thead-light">
+      <tr>
+        <th>Name</th>
+        <th>Package Version</th>
+        <th>Upstream Version</th>
+        <th>Patches</th>
+        <th>License</th>
+        <th>Hash</th>
+        <th>URL</th>
+        {% if debug %}
+        <th>DEBUG</th>
+        {% endif %}
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for name in packages %}
+      <tr>
+        <td><a href="{{url_for('package', name=name)}}">{{name}}</a></td>
+
+
+        {% if packages[name]['status']['version'][0] == 'ok' %}
+        {% if packages[name]['current_version'] | length > 20 %}
+        <td class="table-success">{{packages[name]['current_version'][0:20]+".."}}</td>
+        {% else %}
+        <td class="table-success">{{packages[name]['current_version']}}</td>
+        {% endif %}
+        <td class="table-success"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
+
+        {% elif packages[name]['status']['version'][0] == 'warning' %}
+        {% if packages[name]['current_version'] | length > 20 %}
+        <td class="table-warning">{{packages[name]['current_version'][0:20]+".."}}</td>
+        {% else %}
+        <td class="table-warning">{{packages[name]['current_version']}}</td>
+        {% endif %}
+        <td class="table-warning">{{packages[name]['rm_version']['version']}}</td>
+
+        {% elif packages[name]['status']['version'][0] == 'error' %}
+        {% if packages[name]['current_version'] | length > 20 %}
+        <td class="table-danger">{{packages[name]['current_version'][0:20]+".."}}</td>
+        {% else %}
+        <td class="table-danger">{{packages[name]['current_version']}}</td>
+        {% endif %}
+        <td class="table-danger"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
+
+        {% endif %}
+
+
+        {% if packages[name]['status']['patches'][0] == 'ok' %}
+        <td class="table-success">{{packages[name]['patches']['count']}}</td>
+        {% elif packages[name]['status']['patches'][0] == 'warning' %}
+        <td class="table-warning">{{packages[name]['patches']['count']}}</td>
+        {% elif packages[name]['status']['patches'][0] == 'error' %}
+        <td class="table-danger">{{packages[name]['patches']['count']}}</td>
+        {% endif %}
+
+        {% if packages[name]['status']['license-files'][0] == 'ok' %}
+        <td class="table-success">YES</td>
+        {% else %}
+        <td class="table-danger">NO</td>
+        {% endif %}
+
+        {% if packages[name]['status']['hash'][0] == 'ok' %}
+        <td class="table-success">YES</td>
+        {% else %}
+        <td class="table-danger">NO</td>
+        {% endif %}
+
+        {% if packages[name]['status']['url'][0] == 'ok' %}
+        <td class="table-success"><a href="{{packages[name]['url']}}">URL</a></td>
+        {% elif packages[name]['status']['url'][0] == 'warning' %}
+        <td class="table-warning">{{packages[name]['patches']['count']}}</td>
+        {% elif packages[name]['status']['url'][0] == 'error' %}
+        <td class="table-danger">{{packages[name]['status']['url'][1]}}</td>
+        {% endif %}
+
+        {% if debug %}
+        <td>{{packages[name]}}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+{% endblock %}
