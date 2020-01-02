@@ -18,11 +18,22 @@ def _get_stats():
     files = [f for f in listdir('data/stats') if isfile(join('data/stats', f))]
     files = sorted(files)
 
+    stats = {
+        'labels': [],
+        'packages': [],
+        'no-hash': [],
+        'version-not-uptodate': [],
+    }
+
     for f in files:
         with open('data/stats/'+f) as json_file:
-            data[f] = json.load(json_file)
+            d = json.load(json_file)
+            stats['labels'].append(str(d['date'][:10]))
+            stats['packages'].append(d['stats']['packages'])
+            stats['version-not-uptodate'].append(d['stats']['version-not-uptodate'])
+            stats['no-hash'].append(d['stats']['no-hash'])
 
-    return data
+    return stats
 
 @app.route('/')
 def index():
@@ -151,7 +162,12 @@ def defconfigs():
 @app.route('/stats')
 def stats():
     data = None
-    data = _get_stats()
+    stats = None
 
-    print (data)
-    return 'hello world'
+    data = _get_data()
+    stats = _get_stats()
+
+    print(stats)
+    return render_template('stats.html',
+                           stats=stats,
+                           commit=data['commit'])

@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container fluid">
+  <div>
+	  <canvas id="chart_pkg_count"></canvas>
+  </div>
+
+  <script src="{{url_for('static', filename='js/Chart.bundle.min.js')}}"></script>
+
+  <script type="text/javascript">
+	var chart_traffic_bar_tsn = new Chart(document.getElementById('chart_pkg_count').getContext('2d'), {
+    type: 'line',
+    data: {
+      //labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
+      labels: {{ stats['labels']|tojson }},
+      datasets: [{
+		  data: {{ stats['packages'] }},
+          label: "packages",
+          borderColor: "#3cba9f",
+          fill: false
+        }, {
+		  data: {{ stats['version-not-uptodate'] }},
+          label: "not-uptodate",
+          borderColor: "#8e5ea2",
+          fill: false
+        }, {
+		  data: {{ stats['no-hash'] }},
+          label: "no-hash",
+          borderColor: "#3e95cd",
+          fill: false
+        }
+      ]
+    },
+//    data:  {
+//	    labels: ["stats"],
+//        datasets: [
+//            {
+//                label: 'stats',
+//                backgroundColor: ["rgba(51, 204, 255, 1)"],
+//                data : [0],
+//            },
+//        ]
+//    },
+
+//    options: {
+//        responsive: true,
+//        animation : false,
+//        legend: { display: false },
+//        tooltips: { enabled: false },
+//        scales: {
+//            xAxes: [{ ticks: { beginAtZero: true, max: 5 } }]
+//        },
+//    },
+  });
+  </script>
+</div>
+{% endblock %}
