@@ -7,17 +7,13 @@
     <thead class="thead-light">
     <tr>
       <th>Name</th>
-      <th>Package Count</th>
-      <th>Defconfig Count</th>
     </tr>
     </thead>
 
     <tbody>
-    {% for name in developers %}
+    {% for name in defconfigs %}
       <tr>
         <td>{{name}}</td>
-		<td><a href="{{url_for('developer', developer=name)}}">{{developers[name]['pkg_count']}}</a></td>
-        <td>{{developers[name]['defconfig_count']}}</td>
       </tr>
     {% endfor %}
     </tbody>

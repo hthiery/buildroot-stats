@@ -99,9 +99,14 @@ def developers():
     for pkg_name in data['packages']:
         for developer in data['packages'][pkg_name]['developers']:
             if developer not in developers:
-                developers[developer] = {'pkg_count': 1}
-            else:
-                developers[developer]['pkg_count'] += 1
+                developers[developer] = {'pkg_count': 0, 'defconfig_count': 0}
+            developers[developer]['pkg_count'] += 1
+
+    for defconfig_name in data['defconfigs']:
+        for developer in data['defconfigs'][defconfig_name]['developers']:
+            if developer not in developers:
+                developers[developer] = {'pkg_count': 0, 'defconfig_count': 0}
+            developers[developer]['defconfig_count'] += 1
 
     developers = OrderedDict(sorted(developers.items(), key=lambda t: t[0]))
 
@@ -125,6 +130,22 @@ def developer(developer):
     return render_template('packages.html',
                            title=title,
                            packages=packages,
+                           commit=data['commit'])
+
+@app.route('/defconfigs')
+def defconfigs():
+    data = None
+    data = _get_data()
+
+    defconfigs = packages = {}
+
+    defconfigs= OrderedDict(sorted(data['defconfigs'].items(), key=lambda t: t[0]))
+
+    title = '{} defconfigs'.format(len(data['defconfigs']))
+
+    return render_template('defconfigs.html',
+                           title=title,
+                           defconfigs=defconfigs,
                            commit=data['commit'])
 
 @app.route('/stats')
