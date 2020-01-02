@@ -2,6 +2,8 @@ import json
 
 from collections import OrderedDict
 from flask import render_template, redirect, request
+from os import listdir, getcwd
+from os.path import isfile, join
 
 from app import app
 
@@ -9,6 +11,17 @@ def _get_data():
     data = None
     with open('data/latest.json') as json_file:
         data = json.load(json_file)
+    return data
+
+def _get_stats():
+    data = {}
+    files = [f for f in listdir('data/stats') if isfile(join('data/stats', f))]
+    files = sorted(files)
+
+    for f in files:
+        with open('data/stats/'+f) as json_file:
+            data[f] = json.load(json_file)
+
     return data
 
 @app.route('/')
@@ -113,3 +126,11 @@ def developer(developer):
                            title=title,
                            packages=packages,
                            commit=data['commit'])
+
+@app.route('/stats')
+def stats():
+    data = None
+    data = _get_stats()
+
+    print (data)
+    return 'hello world'
