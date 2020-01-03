@@ -141,6 +141,8 @@ def developer(developer):
             if dev == developer:
                 packages[pkg_name] = (data['packages'][pkg_name])
 
+    packages = OrderedDict(sorted(packages.items(), key=lambda t: t[0]))
+
     title = '{} packages maintained by {}'.format(len(packages), developer)
 
     return render_template('packages.html',
