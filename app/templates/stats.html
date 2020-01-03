@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container fluid">
+<div class="container fluid mt-2">
+
   <div class="row">
     <div class="col-sm">
       <canvas id="chart_pkg_count"></canvas>
@@ -18,65 +19,97 @@
       <canvas id="chart_pkg_no_license"></canvas>
     </div>
   </div>
-
-  <script src="{{url_for('static', filename='js/Chart.bundle.min.js')}}"></script>
-
-  <script type="text/javascript">
-    var chart_pkg_count = new Chart(document.getElementById('chart_pkg_count').getContext('2d'), {
-      type: 'line',
-      data: {
-        labels: {{ stats['labels']|tojson }},
-        datasets: [{
-            data: {{ stats['packages'] }},
-            label: "packages",
-            borderColor: "#3cba9f",
-            fill: false
-          },
-        ]
-      },
-    });
-
-    var chart_pkg_not_uptodate = new Chart(document.getElementById('chart_pkg_not_uptodate').getContext('2d'), {
-      type: 'line',
-      data: {
-        labels: {{ stats['labels']|tojson }},
-        datasets: [{
-            data: {{ stats['version-not-uptodate'] }},
-            label: "not-uptodate",
-            borderColor: "#8e5ea2",
-            fill: false
-          },
-        ]
-      },
-    });
-
-    var chart_pkg_not_hash = new Chart(document.getElementById('chart_pkg_no_hash').getContext('2d'), {
-      type: 'line',
-      data: {
-        labels: {{ stats['labels']|tojson }},
-        datasets: [{
-            data: {{ stats['no-hash'] }},
-            label: "no-hash",
-            borderColor: "#3e95cd",
-            fill: false
-          },
-        ]
-      },
-    });
-
-    var chart_pkg_not_license = new Chart(document.getElementById('chart_pkg_no_license').getContext('2d'), {
-      type: 'line',
-      data: {
-        labels: {{ stats['labels']|tojson }},
-        datasets: [{
-            data: {{ stats['no-license-files'] }},
-            label: "no-license-files",
-            borderColor: "#3e95cd",
-            fill: false
-          },
-        ]
-      },
-    });
-  </script>
 </div>
+
+<script src="{{url_for('static', filename='js/Chart.bundle.min.js')}}"></script>
+
+<script type="text/javascript">
+  var chart_pkg_count = new Chart(document.getElementById('chart_pkg_count').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: {{ stats['labels']|tojson }},
+      datasets: [{
+          data: {{ stats['packages'] }},
+          borderColor: "#3cba9f",
+          fill: false
+        },
+      ]
+    },
+    options: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: 'Packages'
+      }
+    }
+  });
+
+  var chart_pkg_not_uptodate = new Chart(document.getElementById('chart_pkg_not_uptodate').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: {{ stats['labels']|tojson }},
+      datasets: [{
+          data: {{ stats['version-not-uptodate'] }},
+          borderColor: "#8e5ea2",
+          fill: false
+        },
+      ]
+    },
+    options: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: 'not-uptodate'
+      }
+    }
+  });
+
+  var chart_pkg_not_hash = new Chart(document.getElementById('chart_pkg_no_hash').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: {{ stats['labels']|tojson }},
+      datasets: [{
+          data: {{ stats['no-hash'] }},
+          borderColor: "#3e95cd",
+          fill: false
+        },
+      ]
+    },
+    options: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: 'no-hash'
+      }
+    }
+  });
+
+  var chart_pkg_not_license = new Chart(document.getElementById('chart_pkg_no_license').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: {{ stats['labels']|tojson }},
+      datasets: [{
+          data: {{ stats['no-license-files'] }},
+		  borderColor: "#e8c3b9",
+          fill: false
+        },
+      ]
+    },
+    options: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: 'no-license-files'
+      }
+    }
+  });
+</script>
 {% endblock %}
