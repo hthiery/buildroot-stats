@@ -14,24 +14,29 @@ def _get_data():
     return data
 
 def _get_stats():
-    data = {}
     files = [f for f in listdir('data/stats') if isfile(join('data/stats', f))]
     files = sorted(files)
 
-    stats = {
-        'labels': [],
-        'packages': [],
-        'no-hash': [],
-        'version-not-uptodate': [],
-    }
+    stats = {}
 
     for f in files:
         with open('data/stats/'+f) as json_file:
+
             d = json.load(json_file)
+
+            if 'labels' not in stats:
+                stats['labels'] = []
             stats['labels'].append(str(d['date'][:10]))
-            stats['packages'].append(d['stats']['packages'])
-            stats['version-not-uptodate'].append(d['stats']['version-not-uptodate'])
-            stats['no-hash'].append(d['stats']['no-hash'])
+
+            for k, v in d['stats'].items():
+                if k in 'infras':
+                    continue
+                if k not in stats:
+                    stats[k] = []
+                if k not in d['stats']:
+                    stats[k].append(None)
+                else:
+                    stats[k].append(d['stats'][k])
 
     return stats
 
@@ -167,7 +172,6 @@ def stats():
     data = _get_data()
     stats = _get_stats()
 
-    print(stats)
     return render_template('stats.html',
                            stats=stats,
                            commit=data['commit'])
