@@ -127,7 +127,10 @@ def developers():
     developers = OrderedDict(sorted(developers.items(), key=lambda t: t[0]))
     gravatars = get_gravatars(developers, size=30)
 
+    title = 'Total amount of developers: {}'.format(len(developers))
+
     return render_template('developers.html',
+                           title=title,
                            developers=developers,
                            gravatars=gravatars,
                            commit=data['commit'])
