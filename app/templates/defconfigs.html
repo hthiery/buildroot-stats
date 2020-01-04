@@ -7,6 +7,7 @@
     <thead class="thead-light">
     <tr>
       <th>Name</th>
+      <th>Developers</th>
     </tr>
     </thead>
 
@@ -14,6 +15,11 @@
     {% for name in defconfigs %}
       <tr>
         <td>{{name}}</td>
+        {% if defconfigs[name]['developers'] | length %}
+        <td class="table-success">{{defconfigs[name]['developers'] | length}}</td>
+        {% else %}
+        <td class="table-warning">{{defconfigs[name]['developers'] | length}}</td>
+        {% endif %}
       </tr>
     {% endfor %}
     </tbody>
