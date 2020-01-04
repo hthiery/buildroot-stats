@@ -160,7 +160,6 @@ def developer(developer):
     packages = OrderedDict(sorted(packages.items(), key=lambda t: t[0]))
 
     title = '{} packages maintained by {}'.format(len(packages), developer)
-    get_gravatar_link(developer)
 
     return render_template('packages.html',
                            title=title,
