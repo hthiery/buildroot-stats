@@ -61,9 +61,9 @@
         {% if packages[name]['status']['patches'][0] == 'ok' %}
         <td class="table-success">{{packages[name].patch_count}}</td>
         {% elif packages[name]['status']['patches'][0] == 'warning' %}
-        <td class="table-warning">{{packages[name].patch_count}}</td>
+        <td class="table-warning"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_count}}</a></td>
         {% elif packages[name]['status']['patches'][0] == 'error' %}
-        <td class="table-danger">{{packages[name].patch_count}}</td>
+        <td class="table-danger"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_count}}</a></td>
         {% endif %}
 
         {% if packages[name]['status']['license-files'][0] == 'ok' %}
