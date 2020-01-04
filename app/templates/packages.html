@@ -59,11 +59,11 @@
 
 
         {% if packages[name]['status']['patches'][0] == 'ok' %}
-        <td class="table-success">{{packages[name]['patches']['count']}}</td>
+        <td class="table-success">{{packages[name].patch_count}}</td>
         {% elif packages[name]['status']['patches'][0] == 'warning' %}
-        <td class="table-warning">{{packages[name]['patches']['count']}}</td>
+        <td class="table-warning">{{packages[name].patch_count}}</td>
         {% elif packages[name]['status']['patches'][0] == 'error' %}
-        <td class="table-danger">{{packages[name]['patches']['count']}}</td>
+        <td class="table-danger">{{packages[name].patch_count}}</td>
         {% endif %}
 
         {% if packages[name]['status']['license-files'][0] == 'ok' %}
@@ -87,7 +87,7 @@
         {% if packages[name]['status']['url'][0] == 'ok' %}
         <td class="table-success"><a href="{{packages[name]['url']}}">URL</a></td>
         {% elif packages[name]['status']['url'][0] == 'warning' %}
-        <td class="table-warning">{{packages[name]['patches']['count']}}</td>
+        <td class="table-warning">{{packages[name].patch_count}}</td>
         {% elif packages[name]['status']['url'][0] == 'error' %}
         <td class="table-danger">{{packages[name]['status']['url'][1]}}</td>
         {% endif %}
