@@ -6,6 +6,7 @@
   <table class="table table-striped table-bordered mt-2">
     <thead class="thead-light">
     <tr>
+      <th></th>
       <th>Name</th>
       <th>Package Count</th>
       <th>Defconfig Count</th>
@@ -15,8 +16,9 @@
     <tbody>
     {% for name in developers %}
       <tr>
+        <td><img src="{{gravatars[name]}}"></td>
         <td>{{name}}</td>
-		<td><a href="{{url_for('developer', developer=name)}}">{{developers[name]['pkg_count']}}</a></td>
+        <td><a href="{{url_for('developer', developer=name)}}">{{developers[name]['pkg_count']}}</a></td>
         <td>{{developers[name]['defconfig_count']}}</td>
       </tr>
     {% endfor %}

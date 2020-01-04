@@ -7,11 +7,15 @@ from os.path import isfile, join
 
 from app import app
 
+from .gravatar import get_gravatars, get_gravatar_link
+
+
 def _get_data():
     data = None
     with open('data/latest.json') as json_file:
         data = json.load(json_file)
     return data
+
 
 def _get_stats():
     files = [f for f in listdir('data/stats') if isfile(join('data/stats', f))]
@@ -40,9 +44,11 @@ def _get_stats():
 
     return stats
 
+
 @app.route('/')
 def index():
     return redirect('packages')
+
 
 @app.route('/packages', methods=['GET'])
 def packages():
@@ -57,6 +63,7 @@ def packages():
                            packages=packages,
                            commit=data['commit'])
 
+
 @app.route('/package/<name>')
 def package(name):
     data = _get_data()
@@ -64,9 +71,13 @@ def package(name):
     pkg = data['packages'][name]
     keys = pkg.keys()
 
+    gravatars = get_gravatars(pkg['developers'], size=50)
+
     return render_template('package.html',
-                           name=name, pkg=pkg, keys=keys,
+                           name=name, pkg=pkg,
+                           gravatars=gravatars,
                            commit=data['commit'])
+
 
 @app.route('/filter/<filter>')
 def filter(filter):
@@ -85,6 +96,7 @@ def filter(filter):
                            title=title,
                            packages=packages,
                            commit=data['commit'])
+
 
 @app.route('/infrastructure/<infra>')
 def infrastructure(infra):
@@ -107,6 +119,7 @@ def infrastructure(infra):
                            packages=packages,
                            commit=data['commit'])
 
+
 @app.route('/developers')
 def developers():
     data = _get_data()
@@ -125,10 +138,13 @@ def developers():
             developers[developer]['defconfig_count'] += 1
 
     developers = OrderedDict(sorted(developers.items(), key=lambda t: t[0]))
+    gravatars = get_gravatars(developers, size=30)
 
     return render_template('developers.html',
                            developers=developers,
+                           gravatars=gravatars,
                            commit=data['commit'])
+
 
 @app.route('/developer/<developer>')
 def developer(developer):
@@ -144,11 +160,13 @@ def developer(developer):
     packages = OrderedDict(sorted(packages.items(), key=lambda t: t[0]))
 
     title = '{} packages maintained by {}'.format(len(packages), developer)
+    get_gravatar_link(developer)
 
     return render_template('packages.html',
                            title=title,
                            packages=packages,
                            commit=data['commit'])
+
 
 @app.route('/defconfigs')
 def defconfigs():
@@ -165,6 +183,7 @@ def defconfigs():
                            title=title,
                            defconfigs=defconfigs,
                            commit=data['commit'])
+
 
 @app.route('/stats')
 def stats():
