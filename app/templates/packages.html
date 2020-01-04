@@ -79,9 +79,9 @@
         {% endif %}
 
         {% if packages[name]['status']['developers'][0] == 'ok' %}
-		<td class="table-success">{{packages[name]['developers'] | length}}</td>
+        <td class="table-success">{{packages[name]['developers'] | length}}</td>
         {% else %}
-		<td class="table-warning">{{packages[name]['developers'] | length}}</td>
+        <td class="table-warning">{{packages[name]['developers'] | length}}</td>
         {% endif %}
 
         {% if packages[name]['status']['url'][0] == 'ok' %}
