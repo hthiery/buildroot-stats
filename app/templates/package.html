@@ -38,14 +38,6 @@
               </td>
             </tr>
             <tr>
-              <td>Dependencies</td>
-              <td>
-                {% for dep in pkg['dependencies'] %}
-                <a href="{{url_for('package', name=dep)}}">{{dep}}</a>
-                {% endfor %}
-              </td>
-            </tr>
-            <tr>
               <td>Developer(s)</td>
               <td>
                 {% for developer in pkg['developers'] %}
