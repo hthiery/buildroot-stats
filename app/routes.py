@@ -145,7 +145,7 @@ def defconfigs():
 
     defconfigs= OrderedDict(sorted(data['defconfigs'].items(), key=lambda t: t[0]))
 
-    title = '{} defconfigs'.format(len(data['defconfigs']))
+    title = 'Total amount of defconfigs: {}'.format(len(defconfigs))
 
     return render_template('defconfigs.html',
                            title=title,
