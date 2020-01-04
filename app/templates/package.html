@@ -33,7 +33,7 @@
               <td>Infrastructure(s)</td>
               <td>
                 {% for infra in pkg['infras'] %}
-                <p>{{infra[0]}}: <a href="{{url_for('infrastructure', infra=infra[1])}}">{{infra[1]}}</a></p>
+                <p>{{infra[0]}}: <a href="{{url_for('packages', infra=infra[1])}}">{{infra[1]}}</a></p>
                 {% endfor %}
               </td>
             </tr>

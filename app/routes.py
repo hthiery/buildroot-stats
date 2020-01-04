@@ -56,7 +56,7 @@ def packages():
     packages = {}
 
     developer = request.args.get('developer')
-    filter = request.args.get('filter')
+    status = request.args.get('filter')
     infra = request.args.get('filter')
 
     if developer is not None:
@@ -66,12 +66,12 @@ def packages():
                     packages[pkg_name] = (data['packages'][pkg_name])
         title = '{} packages maintained by {}'.format(len(packages), developer)
 
-    elif filter is not None:
+    elif status is not None:
         for pkg_name in data['packages']:
             pkg = data['packages'][pkg_name]
-            if pkg['status'][filter][0] != 'ok':
+            if pkg['status'][status][0] != 'ok':
                 packages[pkg_name] = pkg
-        title = '{} packages with error in {}'.format(len(packages), filter)
+        title = '{} packages with error in {}'.format(len(packages), status)
 
     elif infra is not None:
         for pkg_name in data['packages']:

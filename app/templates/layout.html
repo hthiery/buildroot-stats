@@ -40,14 +40,14 @@
               Filter
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{{url_for('packages', filter='hash')}}">no hash</a>
-              <a class="dropdown-item" href="{{url_for('packages', filter='patches')}}">patches</a>
-              <a class="dropdown-item" href="{{url_for('packages', filter='license')}}">no license</a>
-              <a class="dropdown-item" href="{{url_for('packages', filter='url')}}">no url</a>
-              <a class="dropdown-item" href="{{url_for('packages', filter='license-files')}}">no licence-files</a>
-              <a class="dropdown-item" href="{{url_for('packages', filter='version')}}">outdated version</a>
-              <a class="dropdown-item" href="{{url_for('packages', filter='developers')}}">no developers</a>
-              <a class="dropdown-item" href="{{url_for('packages', filter='pkg-check')}}">failed pkg-check</a>
+              <a class="dropdown-item" href="{{url_for('packages', status='hash')}}">no hash</a>
+              <a class="dropdown-item" href="{{url_for('packages', status='patches')}}">patches</a>
+              <a class="dropdown-item" href="{{url_for('packages', status='license')}}">no license</a>
+              <a class="dropdown-item" href="{{url_for('packages', status='url')}}">no url</a>
+              <a class="dropdown-item" href="{{url_for('packages', status='license-files')}}">no licence-files</a>
+              <a class="dropdown-item" href="{{url_for('packages', status='version')}}">outdated version</a>
+              <a class="dropdown-item" href="{{url_for('packages', status='developers')}}">no developers</a>
+              <a class="dropdown-item" href="{{url_for('packages', status='pkg-check')}}">failed pkg-check</a>
             </div>
           </li>
         </ul>
