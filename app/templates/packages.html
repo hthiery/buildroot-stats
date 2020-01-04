@@ -87,7 +87,7 @@
         {% if packages[name]['status']['url'][0] == 'ok' %}
         <td class="table-success"><a href="{{packages[name]['url']}}">URL</a></td>
         {% elif packages[name]['status']['url'][0] == 'warning' %}
-        <td class="table-warning">{{packages[name].patch_count}}</td>
+        <td class="table-warning">{{packages[name]['status']['url'][1]}}</td>
         {% elif packages[name]['status']['url'][0] == 'error' %}
         <td class="table-danger">{{packages[name]['status']['url'][1]}}</td>
         {% endif %}
