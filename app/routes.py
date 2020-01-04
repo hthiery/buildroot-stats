@@ -56,7 +56,7 @@ def packages():
     packages = {}
 
     developer = request.args.get('developer')
-    status = request.args.get('filter')
+    status = request.args.get('status')
     infra = request.args.get('filter')
 
     if developer is not None:
