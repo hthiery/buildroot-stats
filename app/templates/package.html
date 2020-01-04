@@ -5,7 +5,7 @@
 
     <div class="card bg-light m-2">
       <div class="card-header">
-        {{ pkg['name'] }}
+        {{ name }}
       </div>
       <ul class="list-group list-group-flush">
           <table class="table table-borderless">
@@ -85,7 +85,7 @@
       <div class="card-header">Patches</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          {% for patch in pkg['patches']['files'] %}
+          {% for patch in pkg.patch_files %}
           <p><a href="https://git.buildroot.net/buildroot/tree/{{pkg['pkg_path'][2:]}}/{{patch}}?id={{commit}}">{{patch}}</a></p>
           {% endfor %}
         </li>

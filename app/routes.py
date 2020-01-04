@@ -65,7 +65,7 @@ def package(name):
     keys = pkg.keys()
 
     return render_template('package.html',
-                           pkg=pkg, keys=keys,
+                           name=name, pkg=pkg, keys=keys,
                            commit=data['commit'])
 
 @app.route('/filter/<filter>')
