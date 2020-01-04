@@ -41,7 +41,7 @@
               <td>Developer(s)</td>
               <td>
                 {% for developer in pkg['developers'] %}
-                <p><a href="{{url_for('developer', developer=developer)}}"><img src="{{gravatars[developer]}}">{{developer}}</a></p>
+                <p><a href="{{url_for('packages', developer=developer)}}"><img src="{{gravatars[developer]}}">{{developer}}</a></p>
                 {% endfor %}
               </td>
             </tr>

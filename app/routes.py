@@ -53,10 +53,38 @@ def index():
 @app.route('/packages', methods=['GET'])
 def packages():
     data = _get_data()
+    packages = {}
 
-    packages = OrderedDict(sorted(data['packages'].items(), key=lambda t: t[0]))
+    developer = request.args.get('developer')
+    filter = request.args.get('filter')
+    infra = request.args.get('filter')
 
-    title = 'Total amount of packages: {}'.format(len(packages))
+    if developer is not None:
+        for pkg_name in data['packages']:
+            for dev in data['packages'][pkg_name]['developers']:
+                if dev == developer:
+                    packages[pkg_name] = (data['packages'][pkg_name])
+        title = '{} packages maintained by {}'.format(len(packages), developer)
+
+    elif filter is not None:
+        for pkg_name in data['packages']:
+            pkg = data['packages'][pkg_name]
+            if pkg['status'][filter][0] != 'ok':
+                packages[pkg_name] = pkg
+        title = '{} packages with error in {}'.format(len(packages), filter)
+
+    elif infra is not None:
+        for pkg_name in data['packages']:
+            pkg = data['packages'][pkg_name]
+            if pkg['infras']:
+                if pkg['infras'][0][1] == infra:
+                    packages[pkg_name] = pkg
+        title = '{} packages with {} infrastructure'.format(len(packages), infra)
+    else:
+        packages = data['packages']
+        title = 'Total amount of packages: {}'.format(len(packages))
+
+    packages = OrderedDict(sorted(packages.items(), key=lambda t: t[0]))
 
     return render_template('packages.html',
                            title=title,
@@ -76,47 +104,6 @@ def package(name):
     return render_template('package.html',
                            name=name, pkg=pkg,
                            gravatars=gravatars,
-                           commit=data['commit'])
-
-
-@app.route('/filter/<filter>')
-def filter(filter):
-    data = _get_data()
-    packages = {}
-
-    for pkg_name in data['packages']:
-        pkg = data['packages'][pkg_name]
-        if pkg['status'][filter][0] != 'ok':
-            packages[pkg_name] = pkg
-        title = '{} packages with error in {}'.format(len(packages), filter)
-
-    packages = OrderedDict(sorted(packages.items(), key=lambda t: t[0]))
-
-    return render_template('packages.html',
-                           title=title,
-                           packages=packages,
-                           commit=data['commit'])
-
-
-@app.route('/infrastructure/<infra>')
-def infrastructure(infra):
-    data = _get_data()
-    packages = {}
-
-    for pkg_name in data['packages']:
-        pkg = data['packages'][pkg_name]
-        if pkg['infras']:
-            if pkg['infras'][0][1] == infra:
-                packages[pkg_name] = pkg
-
-
-    packages = OrderedDict(sorted(packages.items(), key=lambda t: t[0]))
-
-    title = '{} packages with {} infrastructure'.format(len(packages), infra)
-
-    return render_template('packages.html',
-                           title=title,
-                           packages=packages,
                            commit=data['commit'])
 
 
@@ -143,27 +130,6 @@ def developers():
     return render_template('developers.html',
                            developers=developers,
                            gravatars=gravatars,
-                           commit=data['commit'])
-
-
-@app.route('/developer/<developer>')
-def developer(developer):
-    data = None
-    data = _get_data()
-
-    packages = {}
-    for pkg_name in data['packages']:
-        for dev in data['packages'][pkg_name]['developers']:
-            if dev == developer:
-                packages[pkg_name] = (data['packages'][pkg_name])
-
-    packages = OrderedDict(sorted(packages.items(), key=lambda t: t[0]))
-
-    title = '{} packages maintained by {}'.format(len(packages), developer)
-
-    return render_template('packages.html',
-                           title=title,
-                           packages=packages,
                            commit=data['commit'])
 
 

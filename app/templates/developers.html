@@ -18,7 +18,7 @@
       <tr>
         <td><img src="{{gravatars[name]}}"></td>
         <td>{{name}}</td>
-        <td><a href="{{url_for('developer', developer=name)}}">{{developers[name]['pkg_count']}}</a></td>
+        <td><a href="{{url_for('packages', developer=name)}}">{{developers[name]['pkg_count']}}</a></td>
         <td>{{developers[name]['defconfig_count']}}</td>
       </tr>
     {% endfor %}
