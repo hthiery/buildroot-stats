@@ -17,7 +17,7 @@
     <tbody>
     {% for name in defconfigs %}
       <tr>
-        <td>{{name}}</td>
+        <td><a href="https://git.buildroot.net/buildroot/tree/configs/{{name}}_defconfig?h={{commit}}">{{name}}</a>
         {% if defconfigs[name]['developers'] | length %}
         <td class="table-success">{{defconfigs[name]['developers'] | length}}</td>
         {% else %}
