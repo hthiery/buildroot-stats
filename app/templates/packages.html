@@ -81,8 +81,10 @@
 
         {% if packages[name]['status']['hash-license'][0] == 'ok' %}
         <td class="table-success">YES</td>
-        {% else %}
+        {% elif packages[name]['status']['hash-license'][0] == 'error' %}
         <td class="table-danger">NO</td>
+        {% elif packages[name]['status']['hash-license'][0] == 'na' %}
+        <td class="table-secondary">N/A</td>
         {% endif %}
 
         {% if packages[name]['status']['developers'][0] == 'ok' %}

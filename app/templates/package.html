@@ -61,6 +61,8 @@
             <tr class="table-warning">
             {% elif pkg['status'][key][0] == 'error' %}
             <tr class="table-danger">
+            {% elif pkg['status'][key][0] == 'na' %}
+            <tr class="table-secondary">
             {% else %}
             <tr class="table-info">
             {% endif %}
