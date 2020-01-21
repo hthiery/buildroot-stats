@@ -17,6 +17,7 @@
         <th>Patches</th>
         <th>License</th>
         <th>Hash</th>
+        <th>Hash-License</th>
         <th>Developers</th>
         <th>URL</th>
         {% if debug %}
@@ -73,6 +74,12 @@
         {% endif %}
 
         {% if packages[name]['status']['hash'][0] == 'ok' %}
+        <td class="table-success">YES</td>
+        {% else %}
+        <td class="table-danger">NO</td>
+        {% endif %}
+
+        {% if packages[name]['status']['hash-license'][0] == 'ok' %}
         <td class="table-success">YES</td>
         {% else %}
         <td class="table-danger">NO</td>
