@@ -29,9 +29,10 @@
     <tbody>
       {% for name in packages %}
       <tr>
+        <!-- Name -->
         <td><a href="{{url_for('package', name=name)}}">{{name}}</a></td>
 
-
+        <!-- Package Version / Upstream Version -->
         {% if packages[name]['status']['version'][0] == 'ok' %}
         {% if packages[name]['current_version'] | length > 20 %}
         <td class="table-success">{{packages[name]['current_version'][0:20]+".."}}</td>
@@ -55,10 +56,9 @@
         <td class="table-danger">{{packages[name]['current_version']}}</td>
         {% endif %}
         <td class="table-danger"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
-
         {% endif %}
 
-
+        <!-- Patches -->
         {% if packages[name]['status']['patches'][0] == 'ok' %}
         <td class="table-success">{{packages[name].patch_count}}</td>
         {% elif packages[name]['status']['patches'][0] == 'warning' %}
@@ -67,18 +67,21 @@
         <td class="table-danger"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_count}}</a></td>
         {% endif %}
 
-        {% if packages[name]['status']['license-files'][0] == 'ok' %}
+        <!-- License -->
+        {% if packages[name]['status']['license'][0] == 'ok' %}
         <td class="table-success">YES</td>
         {% else %}
         <td class="table-danger">NO</td>
         {% endif %}
 
+        <!-- Hash -->
         {% if packages[name]['status']['hash'][0] == 'ok' %}
         <td class="table-success">YES</td>
         {% else %}
         <td class="table-danger">NO</td>
         {% endif %}
 
+        <!-- Hash License -->
         {% if packages[name]['status']['hash-license'][0] == 'ok' %}
         <td class="table-success">YES</td>
         {% elif packages[name]['status']['hash-license'][0] == 'error' %}
@@ -87,12 +90,14 @@
         <td class="table-secondary">N/A</td>
         {% endif %}
 
+        <!-- Developers -->
         {% if packages[name]['status']['developers'][0] == 'ok' %}
         <td class="table-success">{{packages[name]['developers'] | length}}</td>
         {% else %}
         <td class="table-warning">{{packages[name]['developers'] | length}}</td>
         {% endif %}
 
+        <!-- URL -->
         {% if packages[name]['status']['url'][0] == 'ok' %}
         <td class="table-success"><a href="{{packages[name]['url']}}">URL</a></td>
         {% elif packages[name]['status']['url'][0] == 'warning' %}
