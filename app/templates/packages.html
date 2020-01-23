@@ -34,28 +34,36 @@
 
         <!-- Package Version / Upstream Version -->
         {% if packages[name]['status']['version'][0] == 'ok' %}
-        {% if packages[name]['current_version'] | length > 20 %}
-        <td class="table-success">{{packages[name]['current_version'][0:20]+".."}}</td>
-        {% else %}
-        <td class="table-success">{{packages[name]['current_version']}}</td>
-        {% endif %}
-        <td class="table-success"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
+          {% if packages[name]['current_version'] | length > 20 %}
+            <td class="table-success">{{packages[name]['current_version'][0:20]+".."}}</td>
+          {% else %}
+            <td class="table-success">{{packages[name]['current_version']}}</td>
+          {% endif %}
+          <td class="table-success"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
 
         {% elif packages[name]['status']['version'][0] == 'warning' %}
-        {% if packages[name]['current_version'] | length > 20 %}
-        <td class="table-warning">{{packages[name]['current_version'][0:20]+".."}}</td>
-        {% else %}
-        <td class="table-warning">{{packages[name]['current_version']}}</td>
-        {% endif %}
-        <td class="table-warning">{{packages[name]['rm_version']['version']}}</td>
+          {% if packages[name]['current_version'] | length > 20 %}
+            <td class="table-warning">{{packages[name]['current_version'][0:20]+".."}}</td>
+          {% else %}
+            <td class="table-warning">{{packages[name]['current_version']}}</td>
+          {% endif %}
+          <td class="table-warning">{{packages[name]['rm_version']['version']}}</td>
 
         {% elif packages[name]['status']['version'][0] == 'error' %}
-        {% if packages[name]['current_version'] | length > 20 %}
-        <td class="table-danger">{{packages[name]['current_version'][0:20]+".."}}</td>
+          {% if packages[name]['current_version'] | length > 20 %}
+            <td class="table-danger">{{packages[name]['current_version'][0:20]+".."}}</td>
+          {% else %}
+            <td class="table-danger">{{packages[name]['current_version']}}</td>
+          {% endif %}
+          <td class="table-danger"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
+
+        {% elif packages[name]['status']['version'][0] == 'na' %}
+          <td class="table-secondary">{{packages[name]['current_version']}}</td>
+          <td class="table-secondary"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
+
         {% else %}
-        <td class="table-danger">{{packages[name]['current_version']}}</td>
-        {% endif %}
-        <td class="table-danger"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
+          <td>unknown</td>
+          <td>unknown</td>
         {% endif %}
 
         <!-- Patches -->
@@ -65,29 +73,49 @@
         <td class="table-warning"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_count}}</a></td>
         {% elif packages[name]['status']['patches'][0] == 'error' %}
         <td class="table-danger"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_count}}</a></td>
+        {% elif packages[name]['status']['patches'][0] == 'na' %}
+        <td class="table-secondary">N/A</td>
+        {% else %}
+        <td>unknown</td>
         {% endif %}
 
         <!-- License -->
         {% if packages[name]['status']['license'][0] == 'ok' %}
         <td class="table-success">YES</td>
-        {% else %}
+        {% elif packages[name]['status']['license'][0] == 'warning' %}
+        <td class="table-warning">NO</td>
+        {% elif packages[name]['status']['license'][0] == 'error' %}
         <td class="table-danger">NO</td>
+        {% elif packages[name]['status']['license'][0] == 'na' %}
+        <td class="table-secondary">N/A</td>
+        {% else %}
+        <td>unknown</td>
         {% endif %}
 
         <!-- Hash -->
         {% if packages[name]['status']['hash'][0] == 'ok' %}
         <td class="table-success">YES</td>
-        {% else %}
+        {% elif packages[name]['status']['hash'][0] == 'warning' %}
+        <td class="table-warning">NO</td>
+        {% elif packages[name]['status']['hash'][0] == 'error' %}
         <td class="table-danger">NO</td>
+        {% elif packages[name]['status']['hash'][0] == 'na' %}
+        <td class="table-secondary">N/A</td>
+        {% else %}
+        <td>unknown</td>
         {% endif %}
 
         <!-- Hash License -->
         {% if packages[name]['status']['hash-license'][0] == 'ok' %}
         <td class="table-success">YES</td>
+        {% elif packages[name]['status']['hash-license'][0] == 'warning' %}
+        <td class="table-warning">NO</td>
         {% elif packages[name]['status']['hash-license'][0] == 'error' %}
         <td class="table-danger">NO</td>
         {% elif packages[name]['status']['hash-license'][0] == 'na' %}
         <td class="table-secondary">N/A</td>
+        {% else %}
+        <td>unknown</td>
         {% endif %}
 
         <!-- Developers -->
@@ -104,6 +132,10 @@
         <td class="table-warning">{{packages[name]['status']['url'][1]}}</td>
         {% elif packages[name]['status']['url'][0] == 'error' %}
         <td class="table-danger">{{packages[name]['status']['url'][1]}}</td>
+        {% elif packages[name]['status']['url'][0] == 'na' %}
+        <td class="table-danger">N/A</td>
+        {% else %}
+        <td>unknown</td>
         {% endif %}
 
         {% if debug %}
