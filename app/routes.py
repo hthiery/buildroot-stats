@@ -2,12 +2,12 @@ import json
 
 from collections import OrderedDict
 from flask import (abort, render_template, redirect, request)
-from os import listdir, getcwd
-from os.path import isfile, join
+from os import (listdir, getcwd)
+from os.path import (isfile, join)
 
 from app import app
 
-from .gravatar import get_gravatars, get_gravatar_link
+from .gravatar import (get_gravatars, get_gravatar_link)
 
 
 def _get_data():
