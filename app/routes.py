@@ -1,7 +1,7 @@
 import json
 
 from collections import OrderedDict
-from flask import (abort, render_template, redirect, request)
+from flask import (abort, render_template, redirect, request, url_for)
 from os import (listdir, getcwd)
 from os.path import (isfile, join)
 
@@ -12,6 +12,7 @@ from .gravatar import (get_gravatars, get_gravatar_link)
 
 def _get_data():
     data = None
+
     try:
         with open('data/latest.json') as json_file:
             data = json.load(json_file)
@@ -174,3 +175,9 @@ def stats():
     return render_template('stats.html',
                            stats=stats,
                            commit=data['commit'])
+
+
+@app.route('/json')
+def json_stats():
+    # add a symlink to data/latest.json into static/lastest.json
+    return redirect(url_for('static', filename = 'latest.json'))
