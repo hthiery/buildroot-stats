@@ -1,7 +1,7 @@
 import json
 
 from collections import OrderedDict
-from flask import render_template, redirect, request
+from flask import (abort, render_template, redirect, request)
 from os import listdir, getcwd
 from os.path import isfile, join
 
@@ -12,8 +12,12 @@ from .gravatar import get_gravatars, get_gravatar_link
 
 def _get_data():
     data = None
-    with open('data/latest.json') as json_file:
-        data = json.load(json_file)
+    try:
+        with open('data/latest.json') as json_file:
+            data = json.load(json_file)
+    except AttributeError:
+        abort(404, description="Resource not found")
+
     return data
 
 
@@ -43,6 +47,12 @@ def _get_stats():
                     stats[k].append(d['stats'][k])
 
     return stats
+
+
+@app.errorhandler(404)
+def page_not_found(msg):
+    print(msg)
+    return render_template('404.html', msg=msg, commit=''), 404
 
 
 @app.route('/')
