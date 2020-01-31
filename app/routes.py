@@ -75,14 +75,14 @@ def packages():
             for dev in data['packages'][pkg_name]['developers']:
                 if dev == developer:
                     packages[pkg_name] = (data['packages'][pkg_name])
-        title = '{} packages maintained by {}'.format(len(packages), developer)
+        title = u'{} packages maintained by {}'.format(len(packages), developer)
 
     elif status is not None:
         for pkg_name in data['packages']:
             pkg = data['packages'][pkg_name]
             if pkg['status'][status][0] != 'ok':
                 packages[pkg_name] = pkg
-        title = '{} packages with error in {}'.format(len(packages), status)
+        title = u'{} packages with error in {}'.format(len(packages), status)
 
     elif infra is not None:
         for pkg_name in data['packages']:
@@ -90,10 +90,10 @@ def packages():
             if pkg['infras']:
                 if pkg['infras'][0][1] == infra:
                     packages[pkg_name] = pkg
-        title = '{} packages with {} infrastructure'.format(len(packages), infra)
+        title = u'{} packages with {} infrastructure'.format(len(packages), infra)
     else:
         packages = data['packages']
-        title = 'Total amount of packages: {}'.format(len(packages))
+        title = u'Total amount of packages: {}'.format(len(packages))
 
     packages = OrderedDict(sorted(packages.items(), key=lambda t: t[0]))
 
@@ -138,7 +138,7 @@ def developers():
     developers = OrderedDict(sorted(developers.items(), key=lambda t: t[0]))
     gravatars = get_gravatars(developers, size=30)
 
-    title = 'Total amount of developers: {}'.format(len(developers))
+    title = u'Total amount of developers: {}'.format(len(developers))
 
     return render_template('developers.html',
                            title=title,
@@ -156,7 +156,7 @@ def defconfigs():
 
     defconfigs= OrderedDict(sorted(data['defconfigs'].items(), key=lambda t: t[0]))
 
-    title = 'Total amount of defconfigs: {}'.format(len(defconfigs))
+    title = u'Total amount of defconfigs: {}'.format(len(defconfigs))
 
     return render_template('defconfigs.html',
                            title=title,
