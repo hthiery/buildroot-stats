@@ -39,7 +39,7 @@
           {% else %}
             <td class="table-success">{{packages[name]['current_version']}}</td>
           {% endif %}
-          <td class="table-success"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
+          <td class="table-success"><a href="https://release-monitoring.org/project/{{packages[name]['latest_version']['id']}}">{{packages[name]['latest_version']['version']}}</a></td>
 
         {% elif packages[name]['status']['version'][0] == 'warning' %}
           {% if packages[name]['current_version'] | length > 20 %}
@@ -47,7 +47,7 @@
           {% else %}
             <td class="table-warning">{{packages[name]['current_version']}}</td>
           {% endif %}
-          <td class="table-warning">{{packages[name]['rm_version']['version']}}</td>
+          <td class="table-warning">{{packages[name]['latest_version']['version']}}</td>
 
         {% elif packages[name]['status']['version'][0] == 'error' %}
           {% if packages[name]['current_version'] | length > 20 %}
@@ -55,11 +55,11 @@
           {% else %}
             <td class="table-danger">{{packages[name]['current_version']}}</td>
           {% endif %}
-          <td class="table-danger"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
+          <td class="table-danger"><a href="https://release-monitoring.org/project/{{packages[name]['latest_version']['id']}}">{{packages[name]['latest_version']['version']}}</a></td>
 
         {% elif packages[name]['status']['version'][0] == 'na' %}
           <td class="table-secondary">{{packages[name]['current_version']}}</td>
-          <td class="table-secondary"><a href="https://release-monitoring.org/project/{{packages[name]['rm_version']['id']}}">{{packages[name]['rm_version']['version']}}</a></td>
+          <td class="table-secondary"><a href="https://release-monitoring.org/project/{{packages[name]['latest_version']['id']}}">{{packages[name]['latest_version']['version']}}</a></td>
 
         {% else %}
           <td>unknown</td>
