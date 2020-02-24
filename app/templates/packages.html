@@ -68,11 +68,11 @@
 
         <!-- Patches -->
         {% if packages[name]['status']['patches'][0] == 'ok' %}
-        <td class="table-success">{{packages[name].patch_count}}</td>
+        <td class="table-success">{{packages[name].patch_files | length }}</td>
         {% elif packages[name]['status']['patches'][0] == 'warning' %}
-        <td class="table-warning"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_count}}</a></td>
+        <td class="table-warning"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_files | length}}</a></td>
         {% elif packages[name]['status']['patches'][0] == 'error' %}
-        <td class="table-danger"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_count}}</a></td>
+        <td class="table-danger"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_files | length }}</a></td>
         {% elif packages[name]['status']['patches'][0] == 'na' %}
         <td class="table-secondary">N/A</td>
         {% else %}
