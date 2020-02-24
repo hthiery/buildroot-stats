@@ -82,7 +82,7 @@ def packages():
             pkg = data['packages'][pkg_name]
             if pkg['status'][status][0] != 'ok':
                 packages[pkg_name] = pkg
-        title = u'{} packages with error in {}'.format(len(packages), status)
+        title = u'{} packages with {} check status is not ok'.format(len(packages), status)
 
     elif infra is not None:
         for pkg_name in data['packages']:
