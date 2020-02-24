@@ -100,6 +100,7 @@ def packages():
     return render_template('packages.html',
                            title=title,
                            packages=packages,
+                           status_checks=data['package_status_checks'],
                            commit=data['commit'])
 
 
@@ -115,6 +116,7 @@ def package(name):
     return render_template('package.html',
                            name=name, pkg=pkg,
                            gravatars=gravatars,
+                           status_checks=data['package_status_checks'],
                            commit=data['commit'])
 
 
@@ -144,6 +146,7 @@ def developers():
                            title=title,
                            developers=developers,
                            gravatars=gravatars,
+                           status_checks=data['package_status_checks'],
                            commit=data['commit'])
 
 
@@ -161,6 +164,7 @@ def defconfigs():
     return render_template('defconfigs.html',
                            title=title,
                            defconfigs=defconfigs,
+                           status_checks=data['package_status_checks'],
                            commit=data['commit'])
 
 
@@ -174,6 +178,7 @@ def stats():
 
     return render_template('stats.html',
                            stats=stats,
+                           status_checks=data['package_status_checks'],
                            commit=data['commit'])
 
 

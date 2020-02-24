@@ -22,6 +22,16 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('packages')}}">Packages</a>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Filter
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% for check in status_checks %}
+              <a class="dropdown-item" href="{{url_for('packages', status=check)}}">{{check}}</a>
+			  {% endfor %}
+            </div>
+          </li>
 
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('defconfigs')}}">Defconfigs</a>
@@ -35,22 +45,6 @@
             <a class="nav-link" href="{{url_for('stats')}}">Stats</a>
           </li>
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Filter
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{{url_for('packages', status='hash')}}">no hash</a>
-              <a class="dropdown-item" href="{{url_for('packages', status='patches')}}">patches</a>
-              <a class="dropdown-item" href="{{url_for('packages', status='license')}}">no license</a>
-              <a class="dropdown-item" href="{{url_for('packages', status='hash-license')}}">no hash-license</a>
-              <a class="dropdown-item" href="{{url_for('packages', status='url')}}">no url</a>
-              <a class="dropdown-item" href="{{url_for('packages', status='license-files')}}">no licence-files</a>
-              <a class="dropdown-item" href="{{url_for('packages', status='version')}}">outdated version</a>
-              <a class="dropdown-item" href="{{url_for('packages', status='developers')}}">no developers</a>
-              <a class="dropdown-item" href="{{url_for('packages', status='pkg-check')}}">failed pkg-check</a>
-            </div>
-          </li>
         </ul>
         <span class="navbar-text"><a href="https://git.buildroot.net/buildroot/tree/?h={{commit}}">Git Hash {{commit[:12]}}..</a></span>
       </div>
