@@ -76,6 +76,18 @@
     </div>
 
     <div class="card m-2">
+      <a name="cves"></a>
+      <div class="card-header">CVE</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          {% for cve in pkg.cves %}
+            <p><a href="https://security-tracker.debian.org/tracker/{{cve}}">{{cve}}</a></p>
+          {% endfor %}
+        </li>
+      </ul>
+    </div>
+
+    <div class="card m-2">
       <a name="patches"></a>
       <div class="card-header">Patches</div>
       <ul class="list-group list-group-flush">

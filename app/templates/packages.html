@@ -19,6 +19,7 @@
         <th>Hash</th>
         <th>Hash-License</th>
         <th>Developers</th>
+        <th>CVE</th>
         <th>URL</th>
         {% if debug %}
         <th>DEBUG</th>
@@ -123,6 +124,17 @@
         <td class="table-success">{{packages[name]['developers'] | length}}</td>
         {% else %}
         <td class="table-warning">{{packages[name]['developers'] | length}}</td>
+        {% endif %}
+
+        <!-- CVE -->
+        {% if 'cve' in packages[name]['status'] %}
+        {% if packages[name]['status']['cve'][0] == 'ok' %}
+        <td class="table-success">OK</td>
+        {% else %}
+        <td class="table-danger"><a href="{{url_for('package', name=name, _anchor='cves')}}">{{packages[name].cves | length }}</a></td>
+        {% endif %}
+        {% else %}
+        <td>unknown</td>
         {% endif %}
 
         <!-- URL -->
