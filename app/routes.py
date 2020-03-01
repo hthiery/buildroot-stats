@@ -150,16 +150,24 @@ def developers():
                            commit=data['commit'])
 
 
-@app.route('/defconfigs')
+@app.route('/defconfigs', methods=['GET'])
 def defconfigs():
-    data = None
     data = _get_data()
+    defconfigs = {}
 
-    defconfigs = packages = {}
+    developer = request.args.get('developer')
 
-    defconfigs= OrderedDict(sorted(data['defconfigs'].items(), key=lambda t: t[0]))
+    if developer is not None:
+        for name in data['defconfigs']:
+            for dev in data['defconfigs'][name]['developers']:
+                if dev == developer:
+                    defconfigs[name] = data['defconfigs'][name]
 
-    title = u'Total amount of defconfigs: {}'.format(len(defconfigs))
+        title = u'{} defconfig(s) maintained by {}'.format(len(defconfigs), developer)
+    else:
+
+        defconfigs = OrderedDict(sorted(data['defconfigs'].items(), key=lambda t: t[0]))
+        title = u'Total amount of defconfigs: {}'.format(len(defconfigs))
 
     return render_template('defconfigs.html',
                            title=title,
