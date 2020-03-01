@@ -75,14 +75,14 @@ def packages():
             for dev in data['packages'][pkg_name]['developers']:
                 if dev == developer:
                     packages[pkg_name] = (data['packages'][pkg_name])
-        title = u'{} packages maintained by {}'.format(len(packages), developer)
+        title = u'{} package(s) maintained by {}'.format(len(packages), developer)
 
     elif status is not None:
         for pkg_name in data['packages']:
             pkg = data['packages'][pkg_name]
             if pkg['status'][status][0] != 'ok':
                 packages[pkg_name] = pkg
-        title = u'{} packages with {} check status is not ok'.format(len(packages), status)
+        title = u'{} package(s) with {} check status is not ok'.format(len(packages), status)
 
     elif infra is not None:
         for pkg_name in data['packages']:
@@ -90,7 +90,7 @@ def packages():
             if pkg['infras']:
                 if pkg['infras'][0][1] == infra:
                     packages[pkg_name] = pkg
-        title = u'{} packages with {} infrastructure'.format(len(packages), infra)
+        title = u'{} package(s) with {} infrastructure'.format(len(packages), infra)
     else:
         packages = data['packages']
         title = u'Total amount of packages: {}'.format(len(packages))
