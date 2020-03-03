@@ -69,8 +69,8 @@
 
         <!-- CVE -->
         {% if 'cve' in packages[name]['status'] %}
-        {% if packages[name]['status']['cve'][0] == 'ok' %}
-        <td class="table-success">OK</td>
+        {% if packages[name].cves | length == 0 %}
+        <td class="table-success">0</td>
         {% else %}
         <td class="table-danger"><a href="{{url_for('package', name=name, _anchor='cves')}}">{{packages[name].cves | length }}</a></td>
         {% endif %}
