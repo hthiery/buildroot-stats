@@ -80,7 +80,7 @@
       <div class="card-header">CVE</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          {% for cve in pkg.cves %}
+          {% for cve in pkg.cves | sort %}
             <p><a href="https://security-tracker.debian.org/tracker/{{cve}}">{{cve}}</a></p>
           {% endfor %}
         </li>
@@ -92,7 +92,7 @@
       <div class="card-header">Patches</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          {% for patch in pkg.patch_files %}
+          {% for patch in pkg.patch_files | sort %}
           <p><a href="https://git.buildroot.net/buildroot/tree/{{pkg['pkg_path'][2:]}}/{{patch}}?id={{commit}}">{{patch}}</a></p>
           {% endfor %}
         </li>
