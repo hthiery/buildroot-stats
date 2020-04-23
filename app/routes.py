@@ -68,7 +68,7 @@ def packages():
 
     developer = request.args.get('developer')
     status = request.args.get('status')
-    infra = request.args.get('filter')
+    infra = request.args.get('infra')
 
     if developer is not None:
         for pkg_name in data['packages']:
