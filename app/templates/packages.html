@@ -18,7 +18,6 @@
         <th>Patches</th>
         <th>License</th>
         <th>Hash</th>
-        <th>Hash-License</th>
         <th>Developers</th>
         <th>URL</th>
         {% if debug %}
@@ -112,19 +111,6 @@
         {% elif packages[name]['status']['hash'][0] == 'error' %}
         <td class="table-danger">NO</td>
         {% elif packages[name]['status']['hash'][0] == 'na' %}
-        <td class="table-secondary">N/A</td>
-        {% else %}
-        <td>unknown</td>
-        {% endif %}
-
-        <!-- Hash License -->
-        {% if packages[name]['status']['hash-license'][0] == 'ok' %}
-        <td class="table-success">YES</td>
-        {% elif packages[name]['status']['hash-license'][0] == 'warning' %}
-        <td class="table-warning">NO</td>
-        {% elif packages[name]['status']['hash-license'][0] == 'error' %}
-        <td class="table-danger">NO</td>
-        {% elif packages[name]['status']['hash-license'][0] == 'na' %}
         <td class="table-secondary">N/A</td>
         {% else %}
         <td>unknown</td>
