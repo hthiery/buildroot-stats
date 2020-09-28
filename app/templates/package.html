@@ -5,43 +5,43 @@
 
     <div class="card bg-light m-2">
       <div class="card-header">
-        {{ name }}
+        {{ pkg['name'] }}
       </div>
       <ul class="list-group list-group-flush">
           <table class="table table-borderless">
             <tr>
               <td>Version</td>
-              <td>{{pkg['current_version']}}</td>
+              <td>{{ pkg.current_version }}</td>
             </tr>
             <tr>
               <td>Latest Version</td>
-              <td><a href="http://release-monitoring.org/project/{{pkg['latest_version']['id']}}">{{pkg['latest_version']['version']}}</a></td>
+              <td><a href="http://release-monitoring.org/project/{{ pkg.latest_version_id }}">{{ pkg.latest_version }}</a></td>
             </tr>
             <tr>
               <td>License</td>
-              <td>{{pkg['license']}}</td>
+              <td>{{ pkg.license }}</td>
             </tr>
             <tr>
               <td>Homepage</td>
-              <td><a href="{{pkg['url']}}">{{pkg['url']}}</a></td>
+              <td><a href="{{ pkg.url }}">{{ pkg.url }}</a></td>
             </tr>
             <tr>
               <td>Path</td>
-              <td><a href="https://git.buildroot.net/buildroot/tree/{{pkg['pkg_path']}}?h={{commit}}">{{pkg['pkg_path'][2:]}}</a>
+              <td><a href="https://git.buildroot.net/buildroot/tree/{{ pkg.pkg_path }}?h={{ commit }}">{{ pkg.pkg_path[2:] }}</a>
             </tr>
             <tr>
               <td>Infrastructure(s)</td>
               <td>
-                {% for infra in pkg['infras'] %}
-                <p>{{infra[0]}}: <a href="{{url_for('packages', infra=infra[1])}}">{{infra[1]}}</a></p>
+                {% for infra in pkg.infras %}
+                <p>{{infra.destination}}: <a href="{{url_for('packages', infra=infra.build_system)}}">{{infra.build_system}}</a></p>
                 {% endfor %}
               </td>
             </tr>
             <tr>
               <td>Developer(s)</td>
               <td>
-                {% for developer in pkg['developers'] %}
-                <p><a href="{{url_for('packages', developer=developer)}}"><img src="{{gravatars[developer]}}">{{developer}}</a></p>
+                {% for developer in pkg.developers %}
+                <p><a href="{{ url_for('packages', developer=developer.email) }}"><img src="{{ developer.gravatar_url }}">{{ developer.name }}</a></p>
                 {% endfor %}
               </td>
             </tr>
@@ -49,51 +49,55 @@
       </ul>
     </div>
 
+    <!-- Status -->
     <div class="card bg-light m-2">
       <div class="card-header">Status</div>
       <ul class="list-group list-group-flush">
         <table class="table">
           <tbody>
-          {% for key in pkg['status'] %}
-            {% if pkg['status'][key][0] == 'ok' %}
+          {% for status in pkg.status %}
+            {% if status.result == 'ok' %}
             <tr class="table-success">
-            {% elif pkg['status'][key][0] == 'warning' %}
+            {% elif status.result == 'warning' %}
             <tr class="table-warning">
-            {% elif pkg['status'][key][0] == 'error' %}
+            {% elif status.result == 'error' %}
             <tr class="table-danger">
-            {% elif pkg['status'][key][0] == 'na' %}
+            {% elif status.result == 'na' %}
             <tr class="table-secondary">
             {% else %}
             <tr class="table-info">
             {% endif %}
-              <td> {{ key }}</td>
-              <td> {{ pkg['status'][key][1] }} </td>
+              <td> {{ status.check }}</td>
+              <td> {{ status.verbose }} </td>
             </tr>
           {% endfor %}
+
           </tbody>
         </table>
       </ul>
     </div>
 
+    <!-- CVE -->
     <div class="card m-2">
       <a name="cves"></a>
       <div class="card-header">CVE</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          {% for cve in pkg.cves | sort %}
-            <p><a href="https://security-tracker.debian.org/tracker/{{cve}}">{{cve}}</a></p>
+          {% for cve in pkg.cves %}
+            <p><a href="https://security-tracker.debian.org/tracker/{{ cve.name }}">{{ cve.name }}</a></p>
           {% endfor %}
         </li>
       </ul>
     </div>
 
+    <!-- Patches -->
     <div class="card m-2">
       <a name="patches"></a>
       <div class="card-header">Patches</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          {% for patch in pkg.patch_files | sort %}
-          <p><a href="https://git.buildroot.net/buildroot/tree/{{pkg['pkg_path'][2:]}}/{{patch}}?id={{commit}}">{{patch}}</a></p>
+          {% for patch in pkg.patches %}
+          <p><a href="https://git.buildroot.net/buildroot/tree/{{patch.filename[2:]}}/{{patch.filename}}?id={{commit}}">{{patch.filename}}</a></p>
           {% endfor %}
         </li>
       </ul>

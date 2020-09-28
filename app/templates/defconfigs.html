@@ -15,13 +15,13 @@
     </thead>
 
     <tbody>
-    {% for name in defconfigs %}
+    {% for defconfig in defconfigs %}
       <tr>
-        <td><a href="https://git.buildroot.net/buildroot/tree/configs/{{name}}_defconfig?h={{commit}}">{{name}}</a>
-        {% if defconfigs[name]['developers'] | length %}
-        <td class="table-success">{{defconfigs[name]['developers'] | length}}</td>
+        <td><a href="https://git.buildroot.net/buildroot/tree/configs/{{defconfig.name}}_defconfig?h={{commit}}">{{defconfig.name}}</a>
+        {% if defconfig.developers | length %}
+        <td class="table-success">{{defconfig.developers | length}}</td>
         {% else %}
-        <td class="table-warning">{{defconfigs[name]['developers'] | length}}</td>
+        <td class="table-warning">{{defconfig.developers | length}}</td>
         {% endif %}
       </tr>
     {% endfor %}

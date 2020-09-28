@@ -16,143 +16,69 @@
         <th>Upstream Version</th>
         <th>CVE</th>
         <th>Patches</th>
-        <th>License</th>
-        <th>Hash</th>
-        <th>Hash-License</th>
         <th>Developers</th>
         <th>URL</th>
-        {% if debug %}
-        <th>DEBUG</th>
-        {% endif %}
       </tr>
     </thead>
 
     <tbody>
-      {% for name in packages %}
+      {% for pkg in packages %}
       <tr>
         <!-- Name -->
-        <td><a href="{{url_for('package', name=name)}}">{{name}}</a></td>
+        <td><a href="{{ url_for('package', name=pkg.name) }}">{{ pkg.name }}</a></td>
 
         <!-- Package Version / Upstream Version -->
-        {% if packages[name]['status']['version'][0] == 'ok' %}
-          {% if packages[name]['current_version'] | length > 20 %}
-            <td class="table-success">{{packages[name]['current_version'][0:20]+".."}}</td>
+        {% if pkg.latest_version == None %}
+            {% if pkg.current_version | length > 20 %}
+            <td class="table-secondary">{{ pkg.current_version[0:20] + ".." }}</td>
+            {% else %}
+            <td class="table-secondary">{{ pkg.current_version }}</td>
+            {% endif %}
+            <td class="table-secondary">{{ pkg.latest_version }}</td>
+        {% elif pkg.current_version == pkg.latest_version  %}
+          {% if pkg.current_version | length > 20 %}
+            <td class="table-success">{{ pkg.current_version[0:20] + ".." }}</td>
           {% else %}
-            <td class="table-success">{{packages[name]['current_version']}}</td>
+            <td class="table-success">{{ pkg.current_version }}</td>
           {% endif %}
-          <td class="table-success"><a href="https://release-monitoring.org/project/{{packages[name]['latest_version']['id']}}">{{packages[name]['latest_version']['version']}}</a></td>
-
-        {% elif packages[name]['status']['version'][0] == 'warning' %}
-          {% if packages[name]['current_version'] | length > 20 %}
-            <td class="table-warning">{{packages[name]['current_version'][0:20]+".."}}</td>
-          {% else %}
-            <td class="table-warning">{{packages[name]['current_version']}}</td>
-          {% endif %}
-          <td class="table-warning">{{packages[name]['latest_version']['version']}}</td>
-
-        {% elif packages[name]['status']['version'][0] == 'error' %}
-          {% if packages[name]['current_version'] | length > 20 %}
-            <td class="table-danger">{{packages[name]['current_version'][0:20]+".."}}</td>
-          {% else %}
-            <td class="table-danger">{{packages[name]['current_version']}}</td>
-          {% endif %}
-          <td class="table-danger"><a href="https://release-monitoring.org/project/{{packages[name]['latest_version']['id']}}">{{packages[name]['latest_version']['version']}}</a></td>
-
-        {% elif packages[name]['status']['version'][0] == 'na' %}
-          <td class="table-secondary">{{packages[name]['current_version']}}</td>
-          <td class="table-secondary"><a href="https://release-monitoring.org/project/{{packages[name]['latest_version']['id']}}">{{packages[name]['latest_version']['version']}}</a></td>
-
+          <td class="table-success">{{ pkg.latest_version }}</td>
         {% else %}
-          <td>unknown</td>
-          <td>unknown</td>
+          {% if pkg.current_version | length > 20 %}
+            <td class="table-danger">{{ pkg.current_version[0:20] + ".." }}</td>
+          {% else %}
+            <td class="table-danger">{{ pkg.current_version }}</td>
+          {% endif %}
+          <td class="table-danger">{{ pkg.latest_version }}</td>
         {% endif %}
 
         <!-- CVE -->
-        {% if 'cve' in packages[name]['status'] %}
-        {% if packages[name].cves | length == 0 %}
+        {% if pkg.cve_count == 0 %}
         <td class="table-success">0</td>
         {% else %}
-        <td class="table-danger"><a href="{{url_for('package', name=name, _anchor='cves')}}">{{packages[name].cves | length }}</a></td>
-        {% endif %}
-        {% else %}
-        <td>unknown</td>
+        <td class="table-danger"><a href="{{ url_for('package', name=pkg.name, _anchor='cves') }}">{{ pkg.cve_count }}</a></td>
         {% endif %}
 
         <!-- Patches -->
-        {% if packages[name]['status']['patches'][0] == 'ok' %}
-        <td class="table-success">{{packages[name].patch_files | length }}</td>
-        {% elif packages[name]['status']['patches'][0] == 'warning' %}
-        <td class="table-warning"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_files | length}}</a></td>
-        {% elif packages[name]['status']['patches'][0] == 'error' %}
-        <td class="table-danger"><a href="{{url_for('package', name=name, _anchor='patches')}}">{{packages[name].patch_files | length }}</a></td>
-        {% elif packages[name]['status']['patches'][0] == 'na' %}
-        <td class="table-secondary">N/A</td>
+        {% if pkg['patch_count'] == 0 %}
+        <td class="table-success">0</td>
         {% else %}
-        <td>unknown</td>
-        {% endif %}
-
-        <!-- License -->
-        {% if packages[name]['status']['license'][0] == 'ok' %}
-        <td class="table-success">YES</td>
-        {% elif packages[name]['status']['license'][0] == 'warning' %}
-        <td class="table-warning">NO</td>
-        {% elif packages[name]['status']['license'][0] == 'error' %}
-        <td class="table-danger">NO</td>
-        {% elif packages[name]['status']['license'][0] == 'na' %}
-        <td class="table-secondary">N/A</td>
-        {% else %}
-        <td>unknown</td>
-        {% endif %}
-
-        <!-- Hash -->
-        {% if packages[name]['status']['hash'][0] == 'ok' %}
-        <td class="table-success">YES</td>
-        {% elif packages[name]['status']['hash'][0] == 'warning' %}
-        <td class="table-warning">NO</td>
-        {% elif packages[name]['status']['hash'][0] == 'error' %}
-        <td class="table-danger">NO</td>
-        {% elif packages[name]['status']['hash'][0] == 'na' %}
-        <td class="table-secondary">N/A</td>
-        {% else %}
-        <td>unknown</td>
-        {% endif %}
-
-        <!-- Hash License -->
-        {% if packages[name]['status']['hash-license'][0] == 'ok' %}
-        <td class="table-success">YES</td>
-        {% elif packages[name]['status']['hash-license'][0] == 'warning' %}
-        <td class="table-warning">NO</td>
-        {% elif packages[name]['status']['hash-license'][0] == 'error' %}
-        <td class="table-danger">NO</td>
-        {% elif packages[name]['status']['hash-license'][0] == 'na' %}
-        <td class="table-secondary">N/A</td>
-        {% else %}
-        <td>unknown</td>
+        <td class="table-warning"><a href="{{ url_for('package', name=pkg.name, _anchor='patches') }}">{{ pkg.patch_count }}</a></td>
         {% endif %}
 
         <!-- Developers -->
-        {% if packages[name]['status']['developers'][0] == 'ok' %}
-        <td class="table-success">{{packages[name]['developers'] | length}}</td>
+        {% if pkg.developer_count == 0 %}
+        <td class="table-secondary">{{ pkg.developer_count }}</td>
         {% else %}
-        <td class="table-warning">{{packages[name]['developers'] | length}}</td>
+        <td class="table-success">{{ pkg.developer_count }}</td>
         {% endif %}
 
         <!-- URL -->
-        {% if packages[name]['status']['url'][0] == 'ok' %}
-        <td class="table-success"><a href="{{packages[name]['url']}}">URL</a></td>
-        {% elif packages[name]['status']['url'][0] == 'warning' %}
-        <td class="table-warning">{{packages[name]['status']['url'][1]}}</td>
-        {% elif packages[name]['status']['url'][0] == 'error' %}
-        <td class="table-danger">{{packages[name]['status']['url'][1]}}</td>
-        {% elif packages[name]['status']['url'][0] == 'na' %}
-        <td class="table-danger">N/A</td>
+        {% if pkg.url == None %}
+        <td class="table-secondary"></td>
         {% else %}
-        <td>unknown</td>
+        <td class="table-success"><a href="{{ pkg.url }}">URL</a></td>
         {% endif %}
 
-        {% if debug %}
-        <td>{{packages[name]}}</td>
-        {% endif %}
       </tr>
       {% endfor %}
     </tbody>

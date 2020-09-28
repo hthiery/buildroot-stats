@@ -17,12 +17,12 @@
     </thead>
 
     <tbody>
-    {% for name in developers %}
+    {% for developer in developers %}
       <tr>
-        <td><img src="{{gravatars[name]}}"></td>
-        <td>{{name}}</td>
-        <td><a href="{{url_for('packages', developer=name)}}">{{developers[name]['pkg_count']}}</a></td>
-        <td><a href="{{url_for('defconfigs', developer=name)}}">{{developers[name]['defconfig_count']}}</a></td>
+        <td><img src="{{ developer.gravatar_url }}"></td>
+        <td>{{ developer.name }}</td>
+        <td><a href="{{ url_for('packages', developer=developer.email) }}">{{ developer.packages | length}}</a></td>
+        <td><a href="{{ url_for('defconfigs', developer=developer.email) }}">{{ developer.defconfigs | length }}</a></td>
       </tr>
     {% endfor %}
     </tbody>

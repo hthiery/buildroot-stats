@@ -6,7 +6,7 @@ if int(sys.version[0]) > 2:
     import urllib.parse
 
 
-def get_gravatar_link(email, size=30):
+def get_gravatar_url(email, size=30):
     default = "identicon"
 
     if int(sys.version[0]) > 2:
@@ -24,10 +24,12 @@ def get_gravatars(developers, size=40):
 
     gravatars = {}
     for developer in developers:
-        match = EMAIL_RE.match(developer)
+        print(developer.name)
+        match = EMAIL_RE.match(developer.name)
         if match:
             email = match.group(1)
-            gravatars[developer] = get_gravatar_link(email, size=size)
+            print(email)
+            gravatars[developer] = get_gravatar_url(email, size=size)
         else:
             gravatars[developer] = None
 
