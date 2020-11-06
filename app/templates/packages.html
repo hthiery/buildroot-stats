@@ -34,21 +34,22 @@
             {% else %}
             <td class="table-secondary">{{ pkg.current_version }}</td>
             {% endif %}
-            <td class="table-secondary">{{ pkg.latest_version }}</td>
+            <td class="table-secondary"><a href="https://release-monitoring.org/project/{{ pkg.latest_version_id }}">{{ pkg.latest_version }}</a></td>
+
         {% elif pkg.current_version == pkg.latest_version  %}
           {% if pkg.current_version | length > 20 %}
             <td class="table-success">{{ pkg.current_version[0:20] + ".." }}</td>
           {% else %}
             <td class="table-success">{{ pkg.current_version }}</td>
           {% endif %}
-          <td class="table-success">{{ pkg.latest_version }}</td>
+          <td class="table-success"><a href="https://release-monitoring.org/project/{{ pkg.latest_version_id }}">{{ pkg.latest_version }}</a></td>
         {% else %}
           {% if pkg.current_version | length > 20 %}
             <td class="table-danger">{{ pkg.current_version[0:20] + ".." }}</td>
           {% else %}
             <td class="table-danger">{{ pkg.current_version }}</td>
           {% endif %}
-          <td class="table-danger">{{ pkg.latest_version }}</td>
+          <td class="table-danger"><a href="https://release-monitoring.org/project/{{ pkg.latest_version_id }}">{{ pkg.latest_version }}</a></td>
         {% endif %}
 
         <!-- CVE -->
