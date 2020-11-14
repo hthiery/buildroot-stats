@@ -1,13 +1,14 @@
 import json
 
 from collections import OrderedDict
-from flask import (abort, render_template, redirect, request, url_for)
+from flask import (abort, render_template, redirect, request, url_for, jsonify)
 from os import (listdir)
 from os.path import (isfile, join)
 
 from app import app
 
 from . import models
+
 
 def _get_data():
     data = None
@@ -49,6 +50,39 @@ def _get_stats():
     return stats
 
 
+def _get_commit_id():
+    commit = app.session.query(models.Common).filter_by(key='commit').first()
+    return commit.value
+
+
+def _get_packages_by_developer(developer):
+    return app.session.query(models.Package).filter(models.Package.developers.any(email=developer)).order_by(models.Package.name.asc()).all()
+
+
+def _get_packages_by_infra(infra):
+    return app.session.query(models.Package).filter(models.Package.infras.any(destination='target', build_system=infra)).order_by(models.Package.name.asc()).all()
+
+
+def _get_all_packages():
+    return app.session.query(models.Package).order_by(models.Package.name.asc()).all()
+
+
+def _get_package_by_name(name):
+    return app.session.query(models.Package).filter_by(name=name).first()
+
+
+def _get_all_developers():
+    return app.session.query(models.Developer).order_by(models.Developer.name.asc()).all()
+
+
+def _get_all_defconfigs():
+    return app.session.query(models.Defconfig).order_by(models.Defconfig.name.asc()).all()
+
+
+def _get_defconfigs_by_developer(developer):
+    return app.session.query(models.Defconfig).filter(models.Defconfig.developers.any(email=developer)).order_by(models.Defconfig.name.asc()).all()
+
+
 @app.errorhandler(404)
 def page_not_found(msg):
     print(msg)
@@ -62,6 +96,7 @@ def index():
 
 @app.route('/packages', methods=['GET'])
 def packages():
+    commit = _get_commit_id()
 
     # GET
     developer = request.args.get('developer')
@@ -69,106 +104,73 @@ def packages():
     infra = request.args.get('infra')
 
     if developer is not None:
-        records = app.session.query(models.Package).filter(models.Package.developers.any(email=developer)).order_by(models.Package.name.asc()).all()
-        title = u'{} package(s) maintained by {}'.format(len(records), developer)
+        packages = _get_packages_by_developer(developer)
+        title = u'{} package(s) maintained by {}'.format(len(packages), developer)
+    elif infra is not None:
+        packages = _get_packages_by_infra(infra)
+        title = u'{} package(s) with {} infrastructure'.format(len(packages), infra)
     else:
-        records = app.session.query(models.Package).order_by(models.Package.name.asc()).all()
-        title = u'Total amount of packages: {}'.format(len(records))
+        packages = _get_all_packages()
+        title = u'Total amount of packages: {}'.format(len(packages))
 
     return render_template('packages.html',
                            title=title,
-                           packages=records,
+                           packages=packages,
                            status_checks=[],
-                           commit='commit...tbd')
+                           commit=commit)
 
-#@app.route('/legacy/packages', methods=['GET'])
-#def _packages():
-#    data = _get_data()
-#    packages = {}
-#
-#    developer = request.args.get('developer')
-#    status = request.args.get('status')
-#    infra = request.args.get('infra')
-#
-#    if developer is not None:
-#        for pkg_name in data['packages']:
-#            for dev in data['packages'][pkg_name]['developers']:
-#                if dev == developer:
-#                    packages[pkg_name] = (data['packages'][pkg_name])
-#        title = u'{} package(s) maintained by {}'.format(len(packages), developer)
-#
-#    elif status is not None:
-#        for pkg_name in data['packages']:
-#            pkg = data['packages'][pkg_name]
-#            if pkg['status'][status][0] != 'ok':
-#                packages[pkg_name] = pkg
-#        title = u'{} package(s) with {} check status is not ok'.format(len(packages), status)
-#
-#    elif infra is not None:
-#        for pkg_name in data['packages']:
-#            pkg = data['packages'][pkg_name]
-#            if pkg['infras']:
-#                if pkg['infras'][0][1] == infra:
-#                    packages[pkg_name] = pkg
-#        title = u'{} package(s) with {} infrastructure'.format(len(packages), infra)
-#    else:
-#        packages = data['packages']
-#        title = u'Total amount of packages: {}'.format(len(packages))
-#
-#    packages = OrderedDict(sorted(packages.items(), key=lambda t: t[0]))
-#
-#    return render_template('legacy_packages.html',
-#                           title=title,
-#                           packages=packages,
-#                           status_checks=data['package_status_checks'],
-#                           commit=data['commit'])
 
+@app.route('/status/<name>')
+def status(name):
+    commit = _get_commit_id()
+    package = _get_package_by_name(name)
+    status = {}
+    for s in package.status:
+        status[s.check] = {'result': s.result, 'verbose': s.verbose}
+    return json.dumps(status)
 
 @app.route('/package/<name>')
 def package(name):
-    record = app.session.query(models.Package).filter_by(name=name).first()
+    commit = _get_commit_id()
+    package = _get_package_by_name(name)
     return render_template('package.html',
-                           pkg=record,
+                           pkg=package,
                            status_checks=[],
-                           commit='commit...tbd')
+                           commit=commit)
 
 
 @app.route('/developers')
 def developers():
-    records = app.session.query(models.Developer).order_by(models.Developer.name.asc()).all()
-    title = u'Total amount of developers: {}'.format(len(records))
+    commit = _get_commit_id()
+    developers = _get_all_developers()
+    title = u'Total amount of developers: {}'.format(len(developers))
     return render_template('developers.html',
                            title=title,
-                           developers=records,
+                           developers=developers,
                            status_checks=[],
-                           commit='commit...tbd')
+                           commit=commit)
 
 
 @app.route('/defconfigs', methods=['GET'])
 def defconfigs():
-    records = app.session.query(models.Defconfig).order_by(models.Defconfig.name.asc()).all()
+    commit = _get_commit_id()
+    defconfigs = _get_all_defconfigs()
 
     # GET
     developer = request.args.get('developer')
 
-#    if developer is not None:
-#        for name in data['defconfigs']:
-#            for dev in data['defconfigs'][name]['developers']:
-#                if dev == developer:
-#                    defconfigs[name] = data['defconfigs'][name]
-#
-#        title = u'{} defconfig(s) maintained by {}'.format(len(defconfigs), developer)
-#    else:
-#
-#        defconfigs = OrderedDict(sorted(data['defconfigs'].items(), key=lambda t: t[0]))
-#        title = u'Total amount of defconfigs: {}'.format(len(defconfigs))
-    title = u'Total amount of defconfigs: {}'.format(len(records))
+    if developer is not None:
+        defconfigs = _get_defconfigs_by_developer(developer)
+        title = u'{} defconfig(s) maintained by {}'.format(len(defconfigs), developer)
+    else:
+        defconfigs = _get_all_defconfigs()
+        title = u'Total amount of defconfigs: {}'.format(len(defconfigs))
 
     return render_template('defconfigs.html',
                            title=title,
-                           defconfigs=records,
+                           defconfigs=defconfigs,
                            status_checks=[],
-                           commit='commit...tbd')
+                           commit=commit)
 
 
 @app.route('/stats')
@@ -182,7 +184,7 @@ def stats():
     return render_template('stats.html',
                            stats=stats,
                            status_checks=data['package_status_checks'],
-                           commit=data['commit'])
+                           commit=commit)
 
 
 @app.route('/json')

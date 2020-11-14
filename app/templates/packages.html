@@ -14,6 +14,9 @@
         <th>Name</th>
         <th>Package Version</th>
         <th>Upstream Version</th>
+        <th>Status OK</th>
+        <th>Status Warning</th>
+        <th>Status Error</th>
         <th>CVE</th>
         <th>Patches</th>
         <th>Developers</th>
@@ -52,6 +55,34 @@
           <td class="table-danger"><a href="https://release-monitoring.org/project/{{ pkg.latest_version_id }}">{{ pkg.latest_version }}</a></td>
         {% endif %}
 
+        <!-- Status ok -->
+        {% if pkg.status_ok!= 0 %}
+          <td class="table-success">
+        {% else %}
+          <td class="table-secondary">
+        {% endif %}
+        <a href="{{ url_for('package', name=pkg.name, _anchor='status') }}">{{ pkg.status_ok }}</a>
+        </td>
+        <!-- <td><div id="status-{{pkg.name}}" data-toggle="popover" tooltip-append-to-body="true">?</div></td> -->
+
+        <!-- Status warning -->
+        {% if pkg.status_warning != 0 %}
+          <td class="table-warning">
+        {% else %}
+          <td class="table-success">
+        {% endif %}
+        <a href="{{ url_for('package', name=pkg.name, _anchor='status') }}">{{ pkg.status_warning }}</a>
+        </td>
+
+        <!-- Status error -->
+        {% if pkg.status_error != 0 %}
+          <td class="table-danger">
+        {% else %}
+          <td class="table-success">
+        {% endif %}
+        <a href="{{ url_for('package', name=pkg.name, _anchor='status') }}">{{ pkg.status_error}}</a>
+        </td>
+
         <!-- CVE -->
         {% if pkg.cve_count == 0 %}
         <td class="table-success">0</td>
@@ -70,7 +101,7 @@
         {% if pkg.developer_count == 0 %}
         <td class="table-secondary">{{ pkg.developer_count }}</td>
         {% else %}
-        <td class="table-success">{{ pkg.developer_count }}</td>
+        <td class="table-success"><a href="{{ url_for('package', name=pkg.name, _anchor='developers') }}">{{ pkg.developer_count }}</a></td>
         {% endif %}
 
         <!-- URL -->
@@ -85,4 +116,51 @@
     </tbody>
   </table>
 </div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+$( "[id^=status]" ).click(function(event) {
+  //event.preventDefault();
+  //event.stopPropagation();
+  var pkg_name = event.target.id.replace('status-', '');
+
+  jQuery.get(
+    "status/".concat(pkg_name),
+    {paramOne : 1, paramX : 'abc'},
+    function(data) {
+      console.log(data);
+    }
+  );
+
+  var title = "title";
+  var content = 'some other text here. <br><br> ' +
+          '<button type="button" onclick="document.getElementById(\'checkbox_approval\').checked=false;' +
+          '$(\'#popover\').popover(\'destroy\')">' +
+          'De-Activate' +
+          '</button>' +
+          '<button type="button"  onclick="$(\'#popover\').popover(\'hide\')">' +
+          'Cancel' +
+          '</button>';
+
+  // popover controller
+  $(this).popover({
+    html: true,
+    title: title,
+    content: content,
+    placement: 'right',
+    template: '<div class="popover" role="tooltip" style="width:320px;">' +
+      '<div class="arrow"></div>' +
+      '<h3 class="popover-title"></h3>' +
+      '<div class="popover-content"></div>' +
+      '</div>'
+  }).popover('show');
+});
+
+</script>
 {% endblock %}

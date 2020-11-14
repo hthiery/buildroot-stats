@@ -3,6 +3,8 @@
 {% block content %}
 <div class="container-fluid">
 
+  <div class="row">
+    <div class="col">
     <div class="card bg-light m-2">
       <div class="card-header">
         {{ pkg['name'] }}
@@ -40,6 +42,7 @@
             <tr>
               <td>Developer(s)</td>
               <td>
+                <a name="developers"></a>
                 {% for developer in pkg.developers %}
                 <p><a href="{{ url_for('packages', developer=developer.email) }}"><img src="{{ developer.gravatar_url }}">{{ developer.name }}</a></p>
                 {% endfor %}
@@ -48,14 +51,16 @@
           </table>
       </ul>
     </div>
+    </div>
 
+    <div class="col">
     <!-- Status -->
     <div class="card bg-light m-2">
       <div class="card-header">Status</div>
       <ul class="list-group list-group-flush">
         <table class="table">
           <tbody>
-          {% for status in pkg.status %}
+          {% for status in pkg.status | sort(attribute='check') %}
             {% if status.result == 'ok' %}
             <tr class="table-success">
             {% elif status.result == 'warning' %}
@@ -76,14 +81,16 @@
         </table>
       </ul>
     </div>
+    </div>
+  </div>
 
     <!-- CVE -->
-    <div class="card m-2">
+    <div class="card bg-light m-2">
       <a name="cves"></a>
       <div class="card-header">CVE</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          {% for cve in pkg.cves %}
+          {% for cve in pkg.cves | sort(attribute='name') %}
             <p><a href="https://security-tracker.debian.org/tracker/{{ cve.name }}">{{ cve.name }}</a></p>
           {% endfor %}
         </li>
@@ -91,12 +98,12 @@
     </div>
 
     <!-- Patches -->
-    <div class="card m-2">
+    <div class="card bg-light m-2">
       <a name="patches"></a>
       <div class="card-header">Patches</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          {% for patch in pkg.patches %}
+          {% for patch in pkg.patches | sort(attribute='filename') %}
           <p><a href="https://git.buildroot.net/buildroot/tree/{{patch.filename[2:]}}/{{patch.filename}}?id={{commit}}">{{patch.filename}}</a></p>
           {% endfor %}
         </li>
