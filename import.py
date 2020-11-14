@@ -153,12 +153,15 @@ def cmd_import(args):
     Base.metadata.create_all(engine)
 
     import_from_json(db, args.input)
-    pass
 
 
 def cmd_get_package(args):
-    print('get')
-    pass
+    db = SessionLocal()
+    package = db.query(models.Package).filter_by(name=args.pkg_name).first()
+    print(package.name)
+    print(package.current_version)
+    print(package.latest_version)
+    print(package.url)
 
 
 def main(args=None):
