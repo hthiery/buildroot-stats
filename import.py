@@ -6,10 +6,11 @@ import re
 import sys
 
 from app import models
-from app.database import SessionLocal, engine, Base
+from app.database import (SessionLocal, engine, Base)
 from app.gravatar import get_gravatar_url
 
 EMAIL_RE = re.compile(r"^(.*) <(.*)>$")
+
 
 def import_or_ignore_developer(db, developer):
     match = EMAIL_RE.match(developer)
@@ -71,7 +72,6 @@ def import_packages(db, packages_data):
             p.status.append(s)
 
         for cve in pkg['cves']:
-            print(cve)
             c = models.CVE(name=cve)
             db.add(c)
             p.cves.append(c)
@@ -101,7 +101,6 @@ def import_defconfigs(db, defconfig_data):
 
 
 def import_from_json(db, filename):
-
     data = None
     with open(filename) as json_file:
         data = json.load(json_file)
@@ -109,10 +108,10 @@ def import_from_json(db, filename):
     import_packages(db, data['packages'])
     import_defconfigs(db, data['defconfigs'])
 
-def cmd_import(args):
 
+def cmd_import(args):
     db = SessionLocal()
-    print('import')
+
     # drop all tables
     from sqlalchemy.exc import OperationalError
     for tbl in reversed(Base.metadata.sorted_tables):
