@@ -28,6 +28,17 @@ def import_or_ignore_developer(db, developer):
 
     return record
 
+
+def import_common(db, data):
+    print("importing common ...")
+    sys.stdout.flush()
+    c = models.Common(key='commit', value=data['commit'])
+    db.add(c)
+    c = models.Common(key='date', value=data['date'])
+    db.add(c)
+    db.commit()
+
+
 def import_packages(db, packages_data):
     print("importing packages ...", end='')
     sys.stdout.flush()
@@ -35,6 +46,21 @@ def import_packages(db, packages_data):
         pkg = packages_data[pkg_name]
 
         insert = {}
+
+        insert['status_ok'] = 0
+        insert['status_warning'] = 0
+        insert['status_error'] = 0
+        for status in pkg['status']:
+            s = models.Status(check=status,
+                       result=pkg['status'][status][0],
+                       verbose=pkg['status'][status][1])
+            if pkg['status'][status][0] == 'ok':
+                insert['status_ok'] += 1
+            if pkg['status'][status][0] == 'warning':
+                insert['status_warning'] += 1
+            if pkg['status'][status][0] == 'error':
+                insert['status_error'] += 1
+
         insert['name'] = pkg_name
         insert['current_version'] = pkg['current_version']
         insert['latest_version'] = pkg['latest_version']['version']
@@ -105,6 +131,7 @@ def import_from_json(db, filename):
     with open(filename) as json_file:
         data = json.load(json_file)
 
+    import_common(db, data)
     import_packages(db, data['packages'])
     import_defconfigs(db, data['defconfigs'])
 

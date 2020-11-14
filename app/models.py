@@ -16,6 +16,14 @@ link_table_b = Table('link_defconfig_developer', Base.metadata,
     )
 
 
+class Common(Base):
+    __tablename__ = 'common'
+
+    id = Column(Integer, primary_key=True)
+    key = Column(String)
+    value = Column(String)
+
+
 class Developer(Base):
     __tablename__ = 'developer'
 
@@ -46,6 +54,9 @@ class Package(Base):
     patch_count = Column(Integer)
     developer_count = Column(Integer)
     cve_count = Column(Integer)
+    status_ok = Column(Integer)
+    status_warning = Column(Integer)
+    status_error = Column(Integer)
 
     developers = relationship('Developer', secondary='link_package_developer')
     status = relationship("Status", back_populates="package")
