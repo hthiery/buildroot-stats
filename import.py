@@ -117,7 +117,7 @@ def cmd_import(args):
     from sqlalchemy.exc import OperationalError
     for tbl in reversed(Base.metadata.sorted_tables):
         try:
-            engine.execute(tbl.delete())
+            tbl.drop(engine)
         except OperationalError:
             print("Error deleting {}".format(tbl))
             pass
