@@ -100,7 +100,7 @@ def import_packages(db, packages_data):
             p.status.append(s)
 
         for cve in pkg['cves']:
-            c = models.CVE(name=cve)
+            c = models.Cve(name=cve)
             db.add(c)
             p.cves.append(c)
 

@@ -62,7 +62,7 @@ class Package(Base):
     developers = relationship('Developer', secondary='link_package_developer')
     status = relationship("Status", back_populates="package")
     patches = relationship("Patch", back_populates="package")
-    cves = relationship("CVE", back_populates="package")
+    cves = relationship("Cve", back_populates="package")
     infras = relationship("Infrastructure", back_populates="package")
 
     def __repr__(self):
@@ -107,7 +107,7 @@ class Patch(Base):
        return "<Status(name='%s %s %s')>" % (self.check, self.result, self.verbose)
 
 
-class CVE(Base):
+class Cve(Base):
     __tablename__ = 'cve'
 
     id = Column(Integer, primary_key=True)
