@@ -68,6 +68,7 @@ def import_packages(db, packages_data):
         insert['latest_version_id'] = pkg['latest_version']['id']
         insert['path'] = pkg['path']
         insert['pkg_path'] = pkg['pkg_path']
+        insert['cpeid'] = pkg['cpeid']
         insert['url'] = pkg['url']
         insert['license'] = pkg['license']
         insert['patch_count'] = len(pkg['patch_files'])

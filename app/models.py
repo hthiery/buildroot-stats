@@ -49,6 +49,7 @@ class Package(Base):
     latest_version_id = Column(Integer)
     path = Column(String)
     pkg_path = Column(String)
+    cpeid = Column(String)
     url = Column(String)
     license = Column(String)
     patch_count = Column(Integer)
