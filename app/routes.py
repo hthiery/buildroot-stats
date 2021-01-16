@@ -1,7 +1,8 @@
+import time
 import json
 
 from collections import OrderedDict
-from flask import (abort, render_template, redirect, request, url_for, jsonify)
+from flask import (abort, g, render_template, redirect, request, url_for, jsonify)
 from os import (listdir)
 from os.path import (isfile, join)
 
@@ -81,6 +82,12 @@ def _get_all_defconfigs():
 
 def _get_defconfigs_by_developer(developer):
     return app.session.query(models.Defconfig).filter(models.Defconfig.developers.any(email=developer)).order_by(models.Defconfig.name.asc()).all()
+
+
+@app.before_request
+def before_request():
+    g.request_start_time = time.time()
+    g.request_time = lambda: "%.5fs" % (time.time() - g.request_start_time)
 
 
 @app.errorhandler(404)
