@@ -14,9 +14,9 @@
         <th>Name</th>
         <th>Package Version</th>
         <th>Upstream Version</th>
-        <th>Status OK</th>
-        <th>Status Warning</th>
-        <th>Status Error</th>
+        <th>Checks OK</th>
+        <th>Checks Warning</th>
+        <th>Checks Error</th>
         <th>CVE</th>
         <th>Patches</th>
         <th>Developers</th>
@@ -55,7 +55,7 @@
           <td class="table-danger"><a href="https://release-monitoring.org/project/{{ pkg.latest_version_id }}">{{ pkg.latest_version }}</a></td>
         {% endif %}
 
-        <!-- Status ok -->
+        <!-- CHECK Status ok -->
         {% if pkg.status_ok!= 0 %}
           <td class="table-success">
         {% else %}
@@ -65,7 +65,7 @@
         </td>
         <!-- <td><div id="status-{{pkg.name}}" data-toggle="popover" tooltip-append-to-body="true">?</div></td> -->
 
-        <!-- Status warning -->
+        <!-- CHECK Status warning -->
         {% if pkg.status_warning != 0 %}
           <td class="table-warning">
         {% else %}
@@ -74,7 +74,7 @@
         <a href="{{ url_for('package', name=pkg.name, _anchor='status') }}">{{ pkg.status_warning }}</a>
         </td>
 
-        <!-- Status error -->
+        <!-- CHECK Status error -->
         {% if pkg.status_error != 0 %}
           <td class="table-danger">
         {% else %}
