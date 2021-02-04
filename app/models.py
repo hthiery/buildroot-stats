@@ -1,4 +1,4 @@
-from sqlalchemy import (create_engine ,Table, Column, Integer, String,
+from sqlalchemy import (create_engine, Date, Table, Column, Integer, String,
                         ForeignKey)
 from sqlalchemy.orm import relationship
 
@@ -81,6 +81,7 @@ class Infrastructure(Base):
     def __repr__(self):
        return "<Infra(destination='%s' - build_system='%s')>" % (self.destination, self.build_system)
 
+
 class Status(Base):
     __tablename__ = 'status'
 
@@ -129,3 +130,16 @@ class Defconfig(Base):
 
     def __repr__(self):
        return "<Defconfig(name='%s')>" % (self.name)
+
+
+def _get_date():
+    return datetime.date.today()
+
+
+class Statistic(Base):
+    __tablename__ = 'statistic'
+
+    id = Column(Integer, primary_key=True)
+    date = Column(Date, unique=True)
+    packages = Column(Integer)
+    outdated = Column(Integer)

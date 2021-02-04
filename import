@@ -2,6 +2,7 @@
 from __future__ import print_function
 
 import argparse
+import datetime
 import json
 import re
 import sys
@@ -9,6 +10,7 @@ import sys
 from app import models
 from app.database import (SessionLocal, engine, Base)
 from app.gravatar import get_gravatar_url
+from sqlalchemy.exc import OperationalError
 
 EMAIL_RE = re.compile(r"^(.*) <(.*)>$")
 
@@ -24,7 +26,7 @@ def import_or_ignore_developer(db, developer):
         url = get_gravatar_url(email)
         record = models.Developer(name=name, email=email, gravatar_url=url)
         db.add(record)
-        # we need to commit so further queries will work
+        # need to commit so further queries will work
         db.commit()
 
     return record
@@ -128,22 +130,48 @@ def import_defconfigs(db, defconfig_data):
     print(' {}'.format(db.query(models.Defconfig).count()))
 
 
+def import_statistic(db, data):
+    print("importing statistic ...")
+
+    # date in json is datetime
+    # we only are interisted in the date without time
+    date = datetime.datetime.strptime(data['date'], '%Y-%m-%d %H:%M:%S.%f').date()
+    count = data['stats']['packages']
+    outdated = data['stats']['version-not-uptodate']
+
+    record = db.query(models.Statistic).filter_by(date = date).first()
+
+    if record is None:
+        insert = {}
+        insert['date'] = date
+        insert['packages'] = count
+        insert['outdated'] = outdated
+        s = models.Statistic(**insert)
+        db.add(s)
+        db.commit()
+    else:
+        record.packages = count
+        record.outdated = outdated
+        db.commit()
+
 def import_from_json(db, filename):
     data = None
     with open(filename) as json_file:
         data = json.load(json_file)
 
     import_common(db, data)
+    import_statistic(db, data)
     import_packages(db, data['packages'])
     import_defconfigs(db, data['defconfigs'])
 
 
-def cmd_import(args):
-    db = SessionLocal()
+def drop_tables():
+    print("dropping tables ...")
 
-    # drop all tables
-    from sqlalchemy.exc import OperationalError
     for tbl in reversed(Base.metadata.sorted_tables):
+        if tbl.name == 'statistic':
+            continue
+
         try:
             tbl.drop(engine)
         except OperationalError:
@@ -151,8 +179,16 @@ def cmd_import(args):
             pass
 
 
-    # create databases
+def create_tables():
+    print("creating tables ...")
     Base.metadata.create_all(engine)
+
+
+def cmd_import(args):
+    db = SessionLocal()
+
+    drop_tables()
+    create_tables()
 
     import_from_json(db, args.input)
 
