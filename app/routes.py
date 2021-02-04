@@ -5,11 +5,13 @@ from collections import OrderedDict
 from flask import (abort, g, render_template, redirect, request, url_for, jsonify)
 from os import (listdir)
 from os.path import (isfile, join)
+#from urllib.parse import quote_plus
 
 from app import app
 
 from . import models
 
+#app.jinja_env.filters['quote_plus'] = lambda u: quote_plus(u)
 
 def _get_data():
     data = None
@@ -64,6 +66,11 @@ def _get_packages_by_infra(infra):
     return app.session.query(models.Package).filter(models.Package.infras.any(destination='target', build_system=infra)).order_by(models.Package.name.asc()).all()
 
 
+def _get_packages_by_check_status(check, status):
+    print(check, status)
+    return app.session.query(models.Package).filter(models.Package.status.any(check=check, result=status)).order_by(models.Package.name.asc()).all()
+
+
 def _get_all_packages():
     return app.session.query(models.Package).order_by(models.Package.name.asc()).all()
 
@@ -83,6 +90,31 @@ def _get_all_defconfigs():
 def _get_defconfigs_by_developer(developer):
     return app.session.query(models.Defconfig).filter(models.Defconfig.developers.any(email=developer)).order_by(models.Defconfig.name.asc()).all()
 
+
+def _get_status_checks():
+    checks = [
+        "license",
+        "license-files",
+        "hash",
+        "hash-license",
+        "patches",
+        "pkg-check",
+        "cpe",
+        "url",
+        "developers",
+        "version",
+        "cve"
+    ]
+    return sorted(checks)
+
+def _get_status_results():
+    results = [
+        "na",
+        "ok",
+        "warning",
+        "error"
+    ]
+    return sorted(results)
 
 @app.before_request
 def before_request():
@@ -107,24 +139,30 @@ def packages():
 
     # GET
     developer = request.args.get('developer')
+    check = request.args.get('check')
     status = request.args.get('status')
     infra = request.args.get('infra')
 
+    print(check, status)
     if developer is not None:
         packages = _get_packages_by_developer(developer)
         title = u'{} package(s) maintained by {}'.format(len(packages), developer)
     elif infra is not None:
         packages = _get_packages_by_infra(infra)
         title = u'{} package(s) with {} infrastructure'.format(len(packages), infra)
+    elif check is not None and status is not None:
+        packages = _get_packages_by_check_status(check, status)
+        title = u'{} package(s) filtered by check {} and status {}'.format(len(packages), check, status)
     else:
         packages = _get_all_packages()
         title = u'Total amount of packages: {}'.format(len(packages))
 
     return render_template('packages.html',
                            title=title,
-                           packages=packages,
-                           status_checks=[],
-                           commit=commit)
+                           status_checks=_get_status_checks(),
+                           status_results= _get_status_results(),
+                           commit=commit,
+                           packages=packages)
 
 
 @app.route('/status/<name>')
@@ -141,9 +179,10 @@ def package(name):
     commit = _get_commit_id()
     package = _get_package_by_name(name)
     return render_template('package.html',
-                           pkg=package,
-                           status_checks=[],
-                           commit=commit)
+                           status_checks=_get_status_checks(),
+                           status_results= _get_status_results(),
+                           commit=commit,
+                           pkg=package)
 
 
 @app.route('/developers')
@@ -153,9 +192,10 @@ def developers():
     title = u'Total amount of developers: {}'.format(len(developers))
     return render_template('developers.html',
                            title=title,
-                           developers=developers,
-                           status_checks=[],
-                           commit=commit)
+                           status_checks=_get_status_checks(),
+                           status_results= _get_status_results(),
+                           commit=commit,
+                           developers=developers)
 
 
 @app.route('/defconfigs', methods=['GET'])
@@ -175,9 +215,10 @@ def defconfigs():
 
     return render_template('defconfigs.html',
                            title=title,
-                           defconfigs=defconfigs,
-                           status_checks=[],
-                           commit=commit)
+                           status_checks=_get_status_checks(),
+                           status_results= _get_status_results(),
+                           commit=commit,
+                           defconfigs=defconfigs)
 
 
 @app.route('/stats')
@@ -190,7 +231,8 @@ def stats():
 
     return render_template('stats.html',
                            stats=stats,
-                           status_checks=data['package_status_checks'],
+                           status_checks=_get_status_checks(),
+                           status_results= _get_status_results(),
                            commit=commit)
 
 
