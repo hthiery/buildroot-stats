@@ -9,7 +9,7 @@
     <div class="col">
       <div class="card bg-light m-2">
         <div class="card-header">
-          {{ pkg['name'] }}
+          {{ pkg.name }}
         </div>
         <ul class="list-group list-group-flush">
             <table class="table table-borderless">
@@ -27,7 +27,12 @@
               </tr>
               <tr>
                 <td>CPE ID</td>
-                <td>{{ pkg.cpeid}}</td>
+
+                {% if pkg.cpeid != None %}
+                <td><a href="https://nvd.nist.gov/products/cpe/search/results?namingFormat=2.3&keyword={{ pkg.cpeid }}">{{ pkg.cpeid }}</a></td>
+                {% else %}
+                <td>{{ pkg.cpeid }} - <a href="https://nvd.nist.gov/products/cpe/search/results?namingFormat=2.3&keyword={{ pkg.name }}">Search</a></td>
+                {% endif %}
               </tr>
               <tr>
                 <td>Homepage</td>
@@ -35,7 +40,7 @@
               </tr>
               <tr>
                 <td>Path</td>
-                <td><a href="https://git.buildroot.net/buildroot/tree/{{ pkg.pkg_path }}?h={{ commit }}">{{ pkg.pkg_path[2:] }}</a>
+                <td><a href="https://git.buildroot.net/buildroot/tree/{{ pkg.pkg_path }}?h={{ commit }}">{{ pkg.pkg_path }}</a>
               </tr>
               <tr>
                 <td>Infrastructure(s)</td>
@@ -60,34 +65,35 @@
     </div>
 
     <div class="col">
-    <!-- Status -->
-    <div class="card bg-light m-2">
-      <div class="card-header">Status</div>
-      <ul class="list-group list-group-flush">
-        <table class="table">
-          <tbody>
-          {% for status in pkg.status | sort(attribute='check') %}
-            {% if status.result == 'ok' %}
-            <tr class="table-success">
-            {% elif status.result == 'warning' %}
-            <tr class="table-warning">
-            {% elif status.result == 'error' %}
-            <tr class="table-danger">
-            {% elif status.result == 'na' %}
-            <tr class="table-secondary">
-            {% else %}
-            <tr class="table-info">
-            {% endif %}
-              <td> {{ status.check }}</td>
-              <td> {{ status.verbose }} </td>
-            </tr>
-          {% endfor %}
+      <!-- Status -->
+      <div class="card bg-light m-2">
+        <div class="card-header">Status</div>
+        <ul class="list-group list-group-flush">
+          <table class="table">
+            <tbody>
+            {% for status in pkg.status | sort(attribute='check') %}
+              {% if status.result == 'ok' %}
+              <tr class="table-success">
+              {% elif status.result == 'warning' %}
+              <tr class="table-warning">
+              {% elif status.result == 'error' %}
+              <tr class="table-danger">
+              {% elif status.result == 'na' %}
+              <tr class="table-secondary">
+              {% else %}
+              <tr class="table-info">
+              {% endif %}
+                <td> {{ status.check }}</td>
+                <td> {{ status.verbose }} </td>
+              </tr>
+            {% endfor %}
 
-          </tbody>
-        </table>
-      </ul>
+            </tbody>
+          </table>
+        </ul>
+      </div>
     </div>
-    </div>
+
   </div>
 
   <!-- CVE -->
