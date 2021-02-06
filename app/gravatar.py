@@ -1,6 +1,7 @@
+import hashlib
 import re
 import sys
-import urllib, hashlib
+import urllib
 
 if int(sys.version[0]) > 2:
     import urllib.parse
@@ -24,11 +25,9 @@ def get_gravatars(developers, size=40):
 
     gravatars = {}
     for developer in developers:
-        print(developer.name)
         match = EMAIL_RE.match(developer.name)
         if match:
             email = match.group(1)
-            print(email)
             gravatars[developer] = get_gravatar_url(email, size=size)
         else:
             gravatars[developer] = None
