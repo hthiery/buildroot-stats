@@ -5,15 +5,15 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 link_table_a = Table('link_package_developer', Base.metadata,
-            Column('package_id', Integer, ForeignKey('package.id')),
-            Column('developer_id', Integer, ForeignKey('developer.id'))
-    )
+                     Column('package_id', Integer, ForeignKey('package.id')),
+                     Column('developer_id', Integer, ForeignKey('developer.id'))
+                    )
 
 
 link_table_b = Table('link_defconfig_developer', Base.metadata,
-            Column('defconfig_id', Integer, ForeignKey('defconfig.id')),
-            Column('developer_id', Integer, ForeignKey('developer.id'))
-    )
+                     Column('defconfig_id', Integer, ForeignKey('defconfig.id')),
+                     Column('developer_id', Integer, ForeignKey('developer.id'))
+                    )
 
 
 class Common(Base):
@@ -36,7 +36,7 @@ class Developer(Base):
     defconfigs = relationship('Defconfig', secondary='link_defconfig_developer')
 
     def __repr__(self):
-       return "<Developer(name='%s', email='%s')>" % (self.name, self.email)
+        return "<Developer(name='%s', email='%s')>" % (self.name, self.email)
 
 
 class Package(Base):
@@ -66,7 +66,7 @@ class Package(Base):
     infras = relationship("Infrastructure", back_populates="package")
 
     def __repr__(self):
-       return "<Package(name='%s')>" % (self.name)
+        return "<Package(name='%s')>" % (self.name)
 
 
 class Infrastructure(Base):
@@ -79,7 +79,7 @@ class Infrastructure(Base):
     package = relationship("Package", back_populates="infras")
 
     def __repr__(self):
-       return "<Infra(destination='%s' - build_system='%s')>" % (self.destination, self.build_system)
+        return "<Infra(destination='%s' - build_system='%s')>" % (self.destination, self.build_system)
 
 
 class Status(Base):
@@ -93,7 +93,7 @@ class Status(Base):
     package = relationship("Package", back_populates="status")
 
     def __repr__(self):
-       return "<Status(check='%s' - result='%s' - versose='%s')>" % (self.check, self.result, self.verbose)
+        return "<Status(check='%s' - result='%s' - versose='%s')>" % (self.check, self.result, self.verbose)
 
 
 class Patch(Base):
@@ -105,7 +105,7 @@ class Patch(Base):
     package = relationship("Package", back_populates="patches")
 
     def __repr__(self):
-       return "<Status(name='%s %s %s')>" % (self.check, self.result, self.verbose)
+        return "<Status(name='%s %s %s')>" % (self.check, self.result, self.verbose)
 
 
 class Cve(Base):
@@ -117,7 +117,7 @@ class Cve(Base):
     package = relationship("Package", back_populates="cves")
 
     def __repr__(self):
-       return "<Status(name='%s')>" % (self.name)
+        return "<Status(name='%s')>" % (self.name)
 
 
 class Defconfig(Base):
@@ -129,7 +129,7 @@ class Defconfig(Base):
     developers = relationship('Developer', secondary='link_defconfig_developer')
 
     def __repr__(self):
-       return "<Defconfig(name='%s')>" % (self.name)
+        return "<Defconfig(name='%s')>" % (self.name)
 
 
 def _get_date():
