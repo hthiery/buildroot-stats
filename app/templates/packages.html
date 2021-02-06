@@ -20,9 +20,6 @@
         <th>Checks Warning</th>
         <th>Checks Error</th>
         <th>CVE</th>
-        <th>Patches</th>
-        <th>Developers</th>
-        <th>URL</th>
       </tr>
     </thead>
 
@@ -90,27 +87,6 @@
         <td class="table-success">0</td>
         {% else %}
         <td class="table-danger"><a href="{{ url_for('package', name=pkg.name, _anchor='cves') }}">{{ pkg.cve_count }}</a></td>
-        {% endif %}
-
-        <!-- Patches -->
-        {% if pkg['patch_count'] == 0 %}
-        <td class="table-success">0</td>
-        {% else %}
-        <td class="table-warning"><a href="{{ url_for('package', name=pkg.name, _anchor='patches') }}">{{ pkg.patch_count }}</a></td>
-        {% endif %}
-
-        <!-- Developers -->
-        {% if pkg.developer_count == 0 %}
-        <td class="table-secondary">{{ pkg.developer_count }}</td>
-        {% else %}
-        <td class="table-success"><a href="{{ url_for('package', name=pkg.name, _anchor='developers') }}">{{ pkg.developer_count }}</a></td>
-        {% endif %}
-
-        <!-- URL -->
-        {% if pkg.url == None %}
-        <td class="table-secondary"></td>
-        {% else %}
-        <td class="table-success"><a href="{{ pkg.url }}">URL</a></td>
         {% endif %}
 
       </tr>
