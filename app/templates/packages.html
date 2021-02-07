@@ -26,8 +26,12 @@
     <tbody>
       {% for pkg in packages %}
       <tr>
+
+        <!-- create link only once since this takes some extra time -->
+        {% set pkg_link = url_for('package', name=pkg.name) %}
+
         <!-- Name -->
-        <td><a href="{{ url_for('package', name=pkg.name) }}">{{ pkg.name }}</a></td>
+        <td><a href="{{ pkg_link }}">{{ pkg.name }}</a></td>
 
         <!-- Package Version / Upstream Version -->
         {% if pkg.latest_version == None %}
@@ -60,7 +64,7 @@
         {% else %}
           <td class="table-secondary">
         {% endif %}
-        <a href="{{ url_for('package', name=pkg.name, _anchor='status') }}">{{ pkg.status_ok }}</a>
+        <a href="{{ pkg_link }}#status">{{ pkg.status_ok }}</a>
         </td>
         <!-- <td><div id="status-{{pkg.name}}" data-toggle="popover" tooltip-append-to-body="true">?</div></td> -->
 
@@ -70,7 +74,7 @@
         {% else %}
           <td class="table-success">
         {% endif %}
-        <a href="{{ url_for('package', name=pkg.name, _anchor='status') }}">{{ pkg.status_warning }}</a>
+        <a href="{{ pkg_link }}#status">{{ pkg.status_warning}}</a>
         </td>
 
         <!-- CHECK Status error -->
@@ -79,14 +83,14 @@
         {% else %}
           <td class="table-success">
         {% endif %}
-        <a href="{{ url_for('package', name=pkg.name, _anchor='status') }}">{{ pkg.status_error}}</a>
+        <a href="{{ pkg_link }}#status">{{ pkg.status_error}}</a>
         </td>
 
         <!-- CVE -->
         {% if pkg.cve_count == 0 %}
         <td class="table-success">0</td>
         {% else %}
-        <td class="table-danger"><a href="{{ url_for('package', name=pkg.name, _anchor='cves') }}">{{ pkg.cve_count }}</a></td>
+        <td class="table-danger"><a href="{{ pkg_link }}#cve">{{ pkg.cve_count }}</a></td>
         {% endif %}
 
       </tr>
